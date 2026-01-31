@@ -41,6 +41,7 @@ class Plugin
     {
         new Controllers\SecurityController();
         new Controllers\AdminController();
+        new Controllers\UpdateController();
     }
 }
 
