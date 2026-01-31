@@ -15,6 +15,7 @@ class AdminController
         add_action('admin_init', [$this, 'register_settings']);
 
         // Đăng ký action links cho plugin (Settings | Check Update)
+        // Lưu ý: WPS_PLUGIN_FILE được định nghĩa tại file chính wp-plugin-security.php
         $plugin_base = plugin_basename(WPS_PLUGIN_FILE);
         add_filter("plugin_action_links_{$plugin_base}", [$this, 'add_plugin_action_links']);
     }
@@ -24,15 +25,18 @@ class AdminController
      */
     public function add_plugin_action_links($links)
     {
+        // 1. Tạo liên kết Settings (trỏ về menu slug wp-plugin-security)
         $settings_url = admin_url('admin.php?page=wp-plugin-security');
+        $settings_link = '<a href="' . $settings_url . '">' . __('Settings', 'wp-plugin-security') . '</a>';
+
+        // 2. Tạo liên kết Check Update (Force check WordPress core updates)
         $update_url = wp_nonce_url(admin_url('update-core.php?force-check=1'), 'upgrade-core');
+        $update_link = '<a href="' . $update_url . '" style="color: #d63638; font-weight: bold;">' . __('Check Update', 'wp-plugin-security') . '</a>';
 
-        $custom_links = [
-            '<a href="' . $settings_url . '">Settings</a>',
-            '<a href="' . $update_url . '" style="color: #d63638; font-weight: bold;">Check Update</a>'
-        ];
+        // Thêm các liên kết mới vào đầu danh sách (trước chữ Deactivate)
+        array_unshift($links, $settings_link, $update_link);
 
-        return array_merge($custom_links, $links);
+        return $links;
     }
 
     /**
@@ -63,7 +67,7 @@ class AdminController
      */
     public function render_admin_page()
     {
-        // Xử lý lưu mảng IP trước khi render
+        // Xử lý lưu mảng IP
         if (isset($_POST['wps_blocked_ips_raw'])) {
             $raw_ips = explode("\n", str_replace("\r", "", $_POST['wps_blocked_ips_raw']));
             $clean_ips = array_filter(array_map('trim', $raw_ips));
