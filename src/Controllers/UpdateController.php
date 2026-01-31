@@ -54,8 +54,8 @@ class UpdateController
         $res->homepage = $remote->url;
         $res->download_link = $remote->zip_url;
         $res->sections = [
-            'description' => 'Giải pháp bảo mật toàn diện cho WordPress. Cập nhật tự động trực tiếp từ GitHub (Branch: main).',
-            'changelog' => 'Theo dõi các thay đổi mới nhất tại: ' . $remote->url . '/commits/main'
+            'description' => 'Giải pháp bảo mật toàn diện cho WordPress. Cập nhật tự động trực tiếp từ GitHub Releases.',
+            'changelog' => $remote->body ?? 'Theo dõi các thay đổi mới nhất tại: ' . $remote->url
         ];
 
         return $res;
