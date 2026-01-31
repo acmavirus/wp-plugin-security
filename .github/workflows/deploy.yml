@@ -18,17 +18,29 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, intl
+          tools: composer:v2
+
       - name: Install PHP dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: |
+          composer install --no-dev --optimize-autoloader
+          if [ -d "vendor" ]; then
+            echo "Vendor directory created successfully."
+            ls -F vendor | head -n 10
+          else
+            echo "Error: Vendor directory NOT found!"
+            exit 1
+          fi
 
       - name: Get current date/version
         id: vars
         run: |
-          # Lấy version từ file wp-plugin-security.php bằng grep/sed
           VERSION=$(grep "Version:" wp-plugin-security.php | awk '{print $NF}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          
-          # Kiểm tra xem đây là push tag hay push vào main
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             echo "is_tag=true" >> $GITHUB_OUTPUT
             echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
@@ -39,7 +51,11 @@ jobs:
 
       - name: Create Zip Package
         run: |
-          zip -r wp-plugin-security-${{ steps.vars.outputs.version }}.zip . -x "*.git*" "node_modules/*" ".github/*" "tests/*"
+          # Nén bao gồm cả thư mục vendor
+          zip -r wp-plugin-security-${{ steps.vars.outputs.version }}.zip . -x "*.git*" "node_modules/*" ".github/*" "tests/*" ".gitignore" "composer.json" "composer.lock" "README.md"
+          
+          # Kiểm tra xem folder vendor có trong bản zip không
+          unzip -l wp-plugin-security-${{ steps.vars.outputs.version }}.zip | grep "vendor/" | head -n 5
 
       - name: Check if Tag exists
         id: check_tag
@@ -47,7 +63,6 @@ jobs:
         run: |
           if git rev-parse "v${{ steps.vars.outputs.version }}" >/dev/null 2>&1; then
             echo "exists=true" >> $GITHUB_OUTPUT
-            echo "Tag v${{ steps.vars.outputs.version }} already exists. Skipping auto-release."
           else
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
