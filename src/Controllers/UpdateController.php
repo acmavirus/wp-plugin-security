@@ -23,8 +23,11 @@ class UpdateController
         // Hook vào quá trình kiểm tra cập nhật của WordPress
         add_filter('pre_set_site_transient_update_plugins', [$this->update_service, 'check_for_update']);
 
-        // Hiển thị thông tin chi tiết plugin khi người dùng nhấn "View version details"
+        // Hiển thị thông tin chi tiết plugin
         add_filter('plugins_api', [$this, 'plugin_info'], 20, 3);
+
+        // Sửa lỗi cấu trúc thư mục GitHub (thư mục con sau khi giải nén)
+        add_filter('upgrader_source_selection', [$this->update_service, 'fix_source_selection'], 10, 4);
     }
 
     /**
@@ -32,27 +35,27 @@ class UpdateController
      */
     public function plugin_info($res, $action, $args)
     {
-        $plugin_slug = plugin_basename(WPS_PLUGIN_FILE);
+        $plugin_slug = 'wp-plugin-security';
 
         if ($action !== 'plugin_information' || $args->slug !== $plugin_slug) {
             return $res;
         }
 
-        $release = $this->update_service->get_latest_release();
-        if (!$release) {
+        $remote = $this->update_service->get_remote_version();
+        if (!$remote) {
             return $res;
         }
 
         $res = new \stdClass();
         $res->name = 'WP Plugin Security';
         $res->slug = $plugin_slug;
-        $res->version = ltrim($release->tag_name, 'v');
+        $res->version = $remote->version;
         $res->author = '<a href="https://thuc.me">AcmaTvirus</a>';
-        $res->homepage = "https://github.com/acmavirus/wp-plugin-security";
-        $res->download_link = $release->assets[0]->browser_download_url ?? '';
+        $res->homepage = $remote->url;
+        $res->download_link = $remote->zip_url;
         $res->sections = [
-            'description' => 'Giải pháp bảo mật toàn diện cho WordPress dựa trên kiến trúc Clean Architecture.',
-            'changelog' => $release->body ?? 'Cập nhật phiên bản mới.'
+            'description' => 'Giải pháp bảo mật toàn diện cho WordPress. Cập nhật tự động trực tiếp từ GitHub (Branch: main).',
+            'changelog' => 'Theo dõi các thay đổi mới nhất tại: ' . $remote->url . '/commits/main'
         ];
 
         return $res;

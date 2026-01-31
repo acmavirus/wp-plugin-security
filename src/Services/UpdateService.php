@@ -4,13 +4,15 @@
 namespace Acma\WpSecurity\Services;
 
 /**
- * Service xử lý việc kiểm tra cập nhật từ GitHub
+ * Service xử lý việc kiểm tra cập nhật từ GitHub mã nguồn (Tracking Branch)
+ * Dựa trên cấu trúc updater thành công của theme Ketsatphugiaan
  */
 class UpdateService
 {
     private $username = 'acmavirus';
     private $repository = 'wp-plugin-security';
     private $plugin_file;
+    private $github_response;
 
     public function __construct($plugin_file)
     {
@@ -18,28 +20,55 @@ class UpdateService
     }
 
     /**
-     * Lấy thông tin bản release mới nhất từ GitHub API
+     * Lấy thông tin phiên bản từ file chính trên GitHub (Raw content)
      */
-    public function get_latest_release()
+    public function get_remote_version()
     {
-        $url = "https://api.github.com/repos/{$this->username}/{$this->repository}/releases/latest";
+        if (!empty($this->github_response)) {
+            return $this->github_response;
+        }
+
+        // Lấy nội dung file chính từ GitHub để đọc version
+        $url = "https://api.github.com/repos/{$this->username}/{$this->repository}/contents/wp-plugin-security.php?ref=main";
 
         $args = [
-            'timeout' => 10,
-            'user-agent' => 'WordPress/' . get_bloginfo('version') . '; ' . get_bloginfo('url'),
+            'headers' => [
+                'Accept' => 'application/vnd.github.v3.raw',
+                'User-Agent' => 'WordPress-Plugin-Updater'
+            ],
+            'timeout' => 10
         ];
 
         $response = wp_remote_get($url, $args);
 
-        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) != 200) {
+        if (is_wp_error($response)) {
             return false;
         }
 
-        return json_decode(wp_remote_retrieve_body($response));
+        $content = wp_remote_retrieve_body($response);
+        if (empty($content)) {
+            return false;
+        }
+
+        // Parse version từ header
+        preg_match('/Version:\s*(.*)$/mi', $content, $matches);
+        $remote_version = isset($matches[1]) ? trim($matches[1]) : false;
+
+        if (!$remote_version) {
+            return false;
+        }
+
+        $this->github_response = (object) [
+            'version' => $remote_version,
+            'zip_url' => "https://github.com/{$this->username}/{$this->repository}/archive/refs/heads/main.zip",
+            'url'     => "https://github.com/{$this->username}/{$this->repository}",
+        ];
+
+        return $this->github_response;
     }
 
     /**
-     * So sánh phiên bản hiện tại với bản mới nhất
+     * So sánh phiên bản hiện tại với bản trên GitHub
      */
     public function check_for_update($transient)
     {
@@ -47,27 +76,40 @@ class UpdateService
             return $transient;
         }
 
-        $release = $this->get_latest_release();
-        if (!$release) {
+        $remote = $this->get_remote_version();
+        if (!$remote) {
             return $transient;
         }
 
         $plugin_file = plugin_basename($this->plugin_file);
         $current_version = $transient->checked[$plugin_file] ?? '0.0.0';
-        $remote_version = ltrim($release->tag_name, 'v');
 
-        if (version_compare($current_version, $remote_version, '<')) {
+        if (version_compare($current_version, $remote->version, '<')) {
             $obj = new \stdClass();
-            $obj->slug = 'wp-plugin-security'; // Slug thư mục
-            $obj->plugin = $plugin_file;       // 'wp-plugin-security/wp-plugin-security.php'
-            $obj->new_version = $remote_version;
-            $obj->url = "https://github.com/{$this->username}/{$this->repository}";
-            $obj->package = $release->assets[0]->browser_download_url ?? '';
+            $obj->slug = 'wp-plugin-security';
+            $obj->plugin = $plugin_file;
+            $obj->new_version = $remote->version;
+            $obj->url = $remote->url;
+            $obj->package = $remote->zip_url;
 
             $transient->response[$plugin_file] = $obj;
         }
 
         return $transient;
+    }
+
+    /**
+     * Sửa tên thư mục plugin sau khi giải nén từ GitHub (thường bị thêm đuôi -main)
+     */
+    public function fix_source_selection($source, $remote_source, $upgrader, $hook_extra)
+    {
+        if (isset($hook_extra['plugin']) && $hook_extra['plugin'] === plugin_basename($this->plugin_file)) {
+            $source_files = array_diff(scandir($source), array('..', '.'));
+            if (count($source_files) === 1 && is_dir($source . '/' . current($source_files))) {
+                $source = $source . '/' . current($source_files) . '/';
+            }
+        }
+        return $source;
     }
 }
 
