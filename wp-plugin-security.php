@@ -20,7 +20,9 @@ if (!defined('ABSPATH')) {
 }
 
 // Định nghĩa hằng số
-define('WPS_PLUGIN_FILE', __FILE__);
+if (!defined('WPS_PLUGIN_FILE')) {
+    define('WPS_PLUGIN_FILE', __FILE__);
+}
 
 // Nạp Autoloader từ Composer
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {

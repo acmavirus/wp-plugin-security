@@ -8,16 +8,24 @@ namespace Acma\WpSecurity\Controllers;
  */
 class AdminController
 {
+
     public function __construct()
     {
         // Đăng ký menu và settings
-        add_action('admin_menu', [$this, 'add_admin_menu']);
+        add_action('admin_menu', [$this, 'add_admin_menu'], 99);
         add_action('admin_init', [$this, 'register_settings']);
 
         // Đăng ký action links cho plugin (Settings | Check Update)
-        // Lưu ý: WPS_PLUGIN_FILE được định nghĩa tại file chính wp-plugin-security.php
+        add_action('init', [$this, 'register_action_links']);
+    }
+
+    /**
+     * Đăng ký filter action links
+     */
+    public function register_action_links()
+    {
         $plugin_base = plugin_basename(WPS_PLUGIN_FILE);
-        add_filter("plugin_action_links_{$plugin_base}", [$this, 'add_plugin_action_links']);
+        add_filter("plugin_action_links_{$plugin_base}", [$this, 'add_plugin_action_links'], 10, 1);
     }
 
     /**
@@ -25,15 +33,16 @@ class AdminController
      */
     public function add_plugin_action_links($links)
     {
-        // 1. Tạo liên kết Settings (trỏ về menu slug wp-plugin-security)
         $settings_url = admin_url('admin.php?page=wp-plugin-security');
-        $settings_link = '<a href="' . $settings_url . '">' . __('Settings', 'wp-plugin-security') . '</a>';
-
-        // 2. Tạo liên kết Check Update (Force check WordPress core updates)
         $update_url = wp_nonce_url(admin_url('update-core.php?force-check=1'), 'upgrade-core');
-        $update_link = '<a href="' . $update_url . '" style="color: #d63638; font-weight: bold;">' . __('Check Update', 'wp-plugin-security') . '</a>';
 
-        // Thêm các liên kết mới vào đầu danh sách (trước chữ Deactivate)
+        $settings_link = '<a href="' . esc_url($settings_url) . '">' . __('Settings', 'wp-plugin-security') . '</a>';
+        $update_link = '<a href="' . esc_url($update_url) . '" style="color: #d63638; font-weight: bold;">' . __('Check Update', 'wp-plugin-security') . '</a>';
+
+        if (!is_array($links)) {
+            $links = [];
+        }
+
         array_unshift($links, $settings_link, $update_link);
 
         return $links;
@@ -50,7 +59,8 @@ class AdminController
             'manage_options',
             'wp-plugin-security',
             [$this, 'render_admin_page'],
-            'dashicons-shield-alt'
+            'dashicons-shield-alt',
+            80
         );
     }
 
@@ -68,10 +78,11 @@ class AdminController
     public function render_admin_page()
     {
         // Xử lý lưu mảng IP
-        if (isset($_POST['wps_blocked_ips_raw'])) {
+        if (isset($_POST['wps_blocked_ips_raw']) && check_admin_referer('wps_settings_action', 'wps_settings_nonce')) {
             $raw_ips = explode("\n", str_replace("\r", "", $_POST['wps_blocked_ips_raw']));
-            $clean_ips = array_filter(array_map('trim', $raw_ips));
+            $clean_ips = array_unique(array_filter(array_map('trim', $raw_ips)));
             update_option('wps_blocked_ips', $clean_ips);
+            echo '<div class="updated"><p>Đã lưu danh sách IP.</p></div>';
         }
 
         $blocked_ips = get_option('wps_blocked_ips', []);
@@ -80,7 +91,7 @@ class AdminController
         <div class="wrap">
             <h1>WP Plugin Security - Cấu hình</h1>
             <form method="post" action="">
-                <?php settings_fields('wps_settings_group'); ?>
+                <?php wp_nonce_field('wps_settings_action', 'wps_settings_nonce'); ?>
                 <table class="form-table">
                     <tr valign="top">
                         <th scope="row">Danh sách IP bị chặn (mỗi IP một dòng)</th>
@@ -90,7 +101,7 @@ class AdminController
                         </td>
                     </tr>
                 </table>
-                <?php submit_button(); ?>
+                <?php submit_button('Lưu thiết lập'); ?>
             </form>
         </div>
 <?php
