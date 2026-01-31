@@ -13,19 +13,25 @@ class AdminController
         add_action('admin_menu', [$this, 'add_admin_menu']);
         add_action('admin_init', [$this, 'register_settings']);
 
-        // Thêm liên kết vào trang danh sách plugin
-        $plugin_base = plugin_basename(WPS_PLUGIN_FILE);
-        add_filter("plugin_action_links_$plugin_base", [$this, 'add_plugin_action_links']);
+        // Sử dụng hook global để đảm bảo tương thích tốt hơn trên Windows
+        add_filter('plugin_action_links', [$this, 'add_plugin_action_links'], 10, 2);
     }
 
     /**
      * Thêm liên kết Settings và Check Update vào danh sách plugin
      */
-    public function add_plugin_action_links($links)
+    public function add_plugin_action_links($links, $file)
     {
+        $plugin_base = plugin_basename(WPS_PLUGIN_FILE);
+
+        // Kiểm tra đúng là plugin của mình thì mới thêm link
+        if ($file !== $plugin_base) {
+            return $links;
+        }
+
         $settings_link = '<a href="' . admin_url('admin.php?page=wp-plugin-security') . '">Settings</a>';
 
-        // Link này sẽ kích hoạt việc kiểm tra cập nhật của WordPress
+        // Link này kích hoạt việc kiểm tra cập nhật (Force check)
         $update_url = wp_nonce_url(admin_url('update-core.php?force-check=1'), 'upgrade-core');
         $update_link = '<a href="' . $update_url . '" style="color: #d63638; font-weight: bold;">Check Update</a>';
 
