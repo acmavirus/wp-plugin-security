@@ -19,6 +19,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Định nghĩa hằng số
+define('WPS_PLUGIN_FILE', __FILE__);
+
 // Nạp Autoloader từ Composer
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';

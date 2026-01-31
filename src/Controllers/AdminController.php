@@ -12,6 +12,24 @@ class AdminController
     {
         add_action('admin_menu', [$this, 'add_admin_menu']);
         add_action('admin_init', [$this, 'register_settings']);
+
+        // Thêm liên kết vào trang danh sách plugin
+        $plugin_base = plugin_basename(WPS_PLUGIN_FILE);
+        add_filter("plugin_action_links_$plugin_base", [$this, 'add_plugin_action_links']);
+    }
+
+    /**
+     * Thêm liên kết Settings và Check Update vào danh sách plugin
+     */
+    public function add_plugin_action_links($links)
+    {
+        $settings_link = '<a href="' . admin_url('admin.php?page=wp-plugin-security') . '">Settings</a>';
+        $update_link = '<a href="https://github.com/acmavirus/wp-plugin-security/releases" target="_blank" style="color: #2271b1; font-weight: bold;">Check Update</a>';
+
+        array_unshift($links, $settings_link);
+        $links[] = $update_link;
+
+        return $links;
     }
 
     public function add_admin_menu()
