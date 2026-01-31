@@ -2,11 +2,11 @@
 
 /**
  * Plugin Name: WP Plugin Security
- * Plugin URI:  https://github.com/acma/wp-plugin-security
+ * Plugin URI:  https://github.com/acmavirus/wp-plugin-security
  * Description: Giải pháp bảo mật toàn diện cho WordPress dựa trên kiến trúc Clean Architecture.
  * Version:     1.0.0
  * Author:      AcmaTvirus
- * Author URI:  https://acma.io
+ * Author URI:  https://thuc.me
  * License:     GPL2
  * Text Domain: wp-plugin-security
  * Domain Path: /languages

@@ -1,7 +1,9 @@
-name: Build and Release Plugin
+name: Build and Auto Update Plugin
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -15,15 +17,31 @@ jobs:
       - name: Install PHP dependencies
         run: composer install --no-dev --optimize-autoloader
 
+      - name: Get current date/version
+        id: vars
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "version=dev-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create Zip Package
         run: |
-          zip -r wp-plugin-security-${{ github.ref_name }}.zip . -x "*.git*" "node_modules/*" ".github/*" "tests/*"
+          zip -r wp-plugin-security-${{ steps.vars.outputs.version }}.zip . -x "*.git*" "node_modules/*" ".github/*" "tests/*"
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: wp-plugin-security-${{ github.ref_name }}.zip
+          files: wp-plugin-security-${{ steps.vars.outputs.version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Latest Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: wp-plugin-security-latest
+          path: wp-plugin-security-${{ steps.vars.outputs.version }}.zip
 
 # Copyright by AcmaTvirus
