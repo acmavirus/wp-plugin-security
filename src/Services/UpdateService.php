@@ -52,19 +52,19 @@ class UpdateService
             return $transient;
         }
 
-        $current_version = $transient->checked[plugin_basename($this->plugin_file)] ?? '0.0.0';
+        $plugin_file = plugin_basename($this->plugin_file);
+        $current_version = $transient->checked[$plugin_file] ?? '0.0.0';
         $remote_version = ltrim($release->tag_name, 'v');
 
         if (version_compare($current_version, $remote_version, '<')) {
-            $plugin_slug = plugin_basename($this->plugin_file);
-
             $obj = new \stdClass();
-            $obj->slug = $plugin_slug;
+            $obj->slug = 'wp-plugin-security'; // Slug thư mục
+            $obj->plugin = $plugin_file;       // 'wp-plugin-security/wp-plugin-security.php'
             $obj->new_version = $remote_version;
             $obj->url = "https://github.com/{$this->username}/{$this->repository}";
-            $obj->package = $release->assets[0]->browser_download_url ?? ''; // Lấy link file zip đầu tiên
+            $obj->package = $release->assets[0]->browser_download_url ?? '';
 
-            $transient->response[$plugin_slug] = $obj;
+            $transient->response[$plugin_file] = $obj;
         }
 
         return $transient;
