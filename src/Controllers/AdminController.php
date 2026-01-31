@@ -10,37 +10,34 @@ class AdminController
 {
     public function __construct()
     {
+        // Đăng ký menu và settings
         add_action('admin_menu', [$this, 'add_admin_menu']);
         add_action('admin_init', [$this, 'register_settings']);
 
-        // Sử dụng hook global để đảm bảo tương thích tốt hơn trên Windows
-        add_filter('plugin_action_links', [$this, 'add_plugin_action_links'], 10, 2);
+        // Đăng ký action links cho plugin (Settings | Check Update)
+        $plugin_base = plugin_basename(WPS_PLUGIN_FILE);
+        add_filter("plugin_action_links_{$plugin_base}", [$this, 'add_plugin_action_links']);
     }
 
     /**
      * Thêm liên kết Settings và Check Update vào danh sách plugin
      */
-    public function add_plugin_action_links($links, $file)
+    public function add_plugin_action_links($links)
     {
-        $plugin_base = plugin_basename(WPS_PLUGIN_FILE);
-
-        // Kiểm tra đúng là plugin của mình thì mới thêm link
-        if ($file !== $plugin_base) {
-            return $links;
-        }
-
-        $settings_link = '<a href="' . admin_url('admin.php?page=wp-plugin-security') . '">Settings</a>';
-
-        // Link này kích hoạt việc kiểm tra cập nhật (Force check)
+        $settings_url = admin_url('admin.php?page=wp-plugin-security');
         $update_url = wp_nonce_url(admin_url('update-core.php?force-check=1'), 'upgrade-core');
-        $update_link = '<a href="' . $update_url . '" style="color: #d63638; font-weight: bold;">Check Update</a>';
 
-        array_unshift($links, $settings_link);
-        $links[] = $update_link;
+        $custom_links = [
+            '<a href="' . $settings_url . '">Settings</a>',
+            '<a href="' . $update_url . '" style="color: #d63638; font-weight: bold;">Check Update</a>'
+        ];
 
-        return $links;
+        return array_merge($custom_links, $links);
     }
 
+    /**
+     * Tạo menu trong admin
+     */
     public function add_admin_menu()
     {
         add_menu_page(
@@ -53,19 +50,32 @@ class AdminController
         );
     }
 
+    /**
+     * Đăng ký settings
+     */
     public function register_settings()
     {
         register_setting('wps_settings_group', 'wps_blocked_ips');
     }
 
+    /**
+     * Render trang cấu hình
+     */
     public function render_admin_page()
     {
+        // Xử lý lưu mảng IP trước khi render
+        if (isset($_POST['wps_blocked_ips_raw'])) {
+            $raw_ips = explode("\n", str_replace("\r", "", $_POST['wps_blocked_ips_raw']));
+            $clean_ips = array_filter(array_map('trim', $raw_ips));
+            update_option('wps_blocked_ips', $clean_ips);
+        }
+
         $blocked_ips = get_option('wps_blocked_ips', []);
         $ips_text = is_array($blocked_ips) ? implode("\n", $blocked_ips) : '';
 ?>
         <div class="wrap">
             <h1>WP Plugin Security - Cấu hình</h1>
-            <form method="post" action="options.php">
+            <form method="post" action="">
                 <?php settings_fields('wps_settings_group'); ?>
                 <table class="form-table">
                     <tr valign="top">
@@ -80,12 +90,6 @@ class AdminController
             </form>
         </div>
 <?php
-
-        if (isset($_POST['wps_blocked_ips_raw'])) {
-            $raw_ips = explode("\n", str_replace("\r", "", $_POST['wps_blocked_ips_raw']));
-            $clean_ips = array_filter(array_map('trim', $raw_ips));
-            update_option('wps_blocked_ips', $clean_ips);
-        }
     }
 }
 
