@@ -40,6 +40,7 @@ class Plugin
     private function init_controllers()
     {
         new Controllers\SecurityController();
+        new Controllers\AdminController();
     }
 }
 
