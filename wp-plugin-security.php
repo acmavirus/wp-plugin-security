@@ -30,14 +30,14 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 /**
- * Khởi tạo Plugin
+ * Khởi tạo Plugin ngay lập tức
  */
-function wp_plugin_security_init()
-{
-    if (class_exists('Acma\\WpSecurity\\Plugin')) {
-        \Acma\WpSecurity\Plugin::instance()->run();
-    }
+if (class_exists('Acma\\WpSecurity\\Plugin')) {
+    \Acma\WpSecurity\Plugin::instance()->run();
+} else {
+    add_action('admin_notices', function () {
+        echo '<div class="notice notice-error"><p><strong>WP Plugin Security:</strong> Hệ thống Autoload không hoạt động hoặc không tìm thấy Class chính. Vui lòng kiểm tra lại thư mục <code>vendor</code>.</p></div>';
+    });
 }
-add_action('plugins_loaded', 'wp_plugin_security_init');
 
 // Copyright by AcmaTvirus
