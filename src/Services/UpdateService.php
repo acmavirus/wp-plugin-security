@@ -5,7 +5,6 @@ namespace Acma\WpSecurity\Services;
 
 /**
  * Service xử lý việc kiểm tra cập nhật từ GitHub Releases Assets
- * Đảm bảo gói tải về chứa đầy đủ thư mục vendor (đã qua build)
  */
 class UpdateService
 {
@@ -20,7 +19,7 @@ class UpdateService
     }
 
     /**
-     * Lấy thông tin bản release mới nhất từ GitHub API (kèm Assets)
+     * Lấy thông tin bản release mới nhất từ GitHub API
      */
     public function get_remote_version()
     {
@@ -48,7 +47,6 @@ class UpdateService
             return false;
         }
 
-        // Ưu tiên lấy file zip được đính kèm trong Assets (vì nó có chứa vendor)
         $download_url = '';
         if (!empty($data->assets)) {
             foreach ($data->assets as $asset) {
@@ -59,7 +57,6 @@ class UpdateService
             }
         }
 
-        // Nếu không có assets, dùng link zipball mặc định của GitHub (Lưu ý: link này không có vendor)
         if (empty($download_url)) {
             $download_url = $data->zipball_url;
         }
@@ -107,11 +104,15 @@ class UpdateService
 
     /**
      * Sửa tên thư mục plugin sau khi giải nén
+     * Chỉ xử lý nếu thư mục được giải nén không khớp với slug của plugin
      */
     public function fix_source_selection($source, $remote_source, $upgrader, $hook_extra)
     {
         if (isset($hook_extra['plugin']) && $hook_extra['plugin'] === plugin_basename($this->plugin_file)) {
             $source_files = array_diff(scandir($source), array('..', '.'));
+
+            // Nếu trong thư mục giải nén chỉ có 1 thư mục mẹ duy nhất (ví dụ: wp-plugin-security-1.0.8)
+            // thì chúng ta cần "đi sâu" vào thư mục đó để lấy source
             if (count($source_files) === 1 && is_dir($source . '/' . current($source_files))) {
                 $source = $source . '/' . current($source_files) . '/';
             }
