@@ -1,0 +1,29 @@
+name: Build and Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install PHP dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Create Zip Package
+        run: |
+          zip -r wp-plugin-security-${{ github.ref_name }}.zip . -x "*.git*" "node_modules/*" ".github/*" "tests/*"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: wp-plugin-security-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# Copyright by AcmaTvirus

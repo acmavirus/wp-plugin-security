@@ -1,0 +1,26 @@
+{
+    "name": "acma/wp-plugin-security",
+    "description": "A professional WordPress security plugin built with Clean Architecture.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "AcmaTvirus",
+            "email": "contact@acma.io"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Acma\\WpSecurity\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}
