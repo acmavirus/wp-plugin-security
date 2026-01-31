@@ -24,7 +24,10 @@ class AdminController
     public function add_plugin_action_links($links)
     {
         $settings_link = '<a href="' . admin_url('admin.php?page=wp-plugin-security') . '">Settings</a>';
-        $update_link = '<a href="https://github.com/acmavirus/wp-plugin-security/releases" target="_blank" style="color: #2271b1; font-weight: bold;">Check Update</a>';
+
+        // Link này sẽ kích hoạt việc kiểm tra cập nhật của WordPress
+        $update_url = wp_nonce_url(admin_url('update-core.php?force-check=1'), 'upgrade-core');
+        $update_link = '<a href="' . $update_url . '" style="color: #d63638; font-weight: bold;">Check Update</a>';
 
         array_unshift($links, $settings_link);
         $links[] = $update_link;
@@ -72,7 +75,6 @@ class AdminController
         </div>
 <?php
 
-        // Xử lý lưu mảng IP
         if (isset($_POST['wps_blocked_ips_raw'])) {
             $raw_ips = explode("\n", str_replace("\r", "", $_POST['wps_blocked_ips_raw']));
             $clean_ips = array_filter(array_map('trim', $raw_ips));
