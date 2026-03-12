@@ -36,9 +36,17 @@ class Plugin
             load_plugin_textdomain('wp-plugin-security', false, dirname(plugin_basename(WPS_PLUGIN_FILE)) . '/languages');
         });
 
-        // Khởi tạo các controller
-        new Controllers\SecurityController();
-        new Controllers\AdminController();
+        // Khởi tạo Admin
+        (new Controllers\AdminController())->init_hooks();
+
+        // Khởi tạo các Features (Runtime hooks)
+        (new Features\Audit\AuditController())->init();
+        (new Features\Firewall\FirewallController())->init();
+        (new Features\Auth\AuthController())->init();
+        (new Features\Monitoring\MonitoringController())->init();
+        (new Features\Tools\ToolsController())->init();
+
+        // Update controller (nếu có)
         new Controllers\UpdateController();
     }
 }
