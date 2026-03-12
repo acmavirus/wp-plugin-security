@@ -23,6 +23,9 @@ if (!defined('ABSPATH')) {
 if (!defined('WPS_PLUGIN_FILE')) {
     define('WPS_PLUGIN_FILE', __FILE__);
 }
+if (!defined('WPS_PLUGIN_DIR')) {
+    define('WPS_PLUGIN_DIR', plugin_dir_path(WPS_PLUGIN_FILE));
+}
 
 // Nạp Autoloader từ Composer
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
