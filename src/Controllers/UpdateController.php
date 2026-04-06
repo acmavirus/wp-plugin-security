@@ -28,6 +28,40 @@ class UpdateController
 
         // Sửa lỗi cấu trúc thư mục GitHub (thư mục con sau khi giải nén)
         add_filter('upgrader_source_selection', [$this->update_service, 'fix_source_selection'], 10, 4);
+
+        // Ajax handler for Check Update button
+        add_action('wp_ajax_wps_check_update', [$this, 'ajax_check_update']);
+    }
+
+    /**
+     * Handle AJAX Check Update
+     */
+    public function ajax_check_update()
+    {
+        check_ajax_referer('wps_check_update_nonce', 'nonce');
+
+        // Force clear update transient
+        delete_site_transient('update_plugins');
+
+        $remote = $this->update_service->get_remote_version();
+
+        if (!function_exists('get_plugin_data')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+        $plugin_data = get_plugin_data(WPS_PLUGIN_FILE, false, false);
+        $current_version = $plugin_data['Version'] ?? '0.0.0';
+
+        if ($remote && version_compare($current_version, $remote->version, '<')) {
+            wp_send_json_success([
+                'message' => 'Có phiên bản mới: v' . $remote->version . '. Đang tải lại trang...',
+                'has_update' => true
+            ]);
+        } else {
+            wp_send_json_success([
+                'message' => 'Bạn đang sử dụng phiên bản mới nhất (' . $current_version . ')!',
+                'has_update' => false
+            ]);
+        }
     }
 
     /**

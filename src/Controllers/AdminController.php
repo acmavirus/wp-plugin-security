@@ -15,6 +15,7 @@ class AdminController
 
         $plugin_base = plugin_basename(WPS_PLUGIN_FILE);
         add_filter("plugin_action_links_{$plugin_base}", [$this, 'add_plugin_action_links']);
+        add_action('admin_footer', [$this, 'add_check_update_script']);
     }
 
     /**
@@ -23,14 +24,62 @@ class AdminController
     public function add_plugin_action_links($links)
     {
         $settings_url = admin_url('admin.php?page=wp-plugin-security');
-        $update_url = wp_nonce_url(admin_url('update-core.php?force-check=1'), 'upgrade-core');
+        $nonce = wp_create_nonce('wps_check_update_nonce');
 
         $custom_links = [
             '<a href="' . esc_url($settings_url) . '">' . __('Settings', 'wp-plugin-security') . '</a>',
-            '<a href="' . esc_url($update_url) . '" style="color: #d63638; font-weight: bold;">' . __('Check Update', 'wp-plugin-security') . '</a>',
+            '<a href="#" class="wps-check-update-btn" data-nonce="' . esc_attr($nonce) . '" style="color: #d63638; font-weight: bold;">' . __('Check Update', 'wp-plugin-security') . '</a>',
         ];
 
         return array_merge($custom_links, (array) $links);
+    }
+
+    /**
+     * Thêm script AJAX cho nút Check Update
+     */
+    public function add_check_update_script()
+    {
+        $screen = get_current_screen();
+        if ($screen && !in_array($screen->id, ['plugins', 'toplevel_page_wp-plugin-security'])) {
+            return;
+        }
+        ?>
+        <script>
+        jQuery(document).ready(function($) {
+            $('.wps-check-update-btn').on('click', function(e) {
+                e.preventDefault();
+                var btn = $(this);
+                var originalText = btn.text();
+                
+                btn.text('Checking...').css({'pointer-events': 'none', 'opacity': '0.6'});
+                
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'wps_check_update',
+                        nonce: btn.data('nonce')
+                    },
+                    success: function(response) {
+                        btn.text(originalText).css({'pointer-events': 'auto', 'opacity': '1'});
+                        if(response.success) {
+                            alert(response.data.message);
+                            if(response.data.has_update) {
+                                location.reload();
+                            }
+                        } else {
+                            alert(response.data.message || 'Lỗi kiểm tra bản cập nhật.');
+                        }
+                    },
+                    error: function() {
+                        btn.text(originalText).css({'pointer-events': 'auto', 'opacity': '1'});
+                        alert('Đã có lỗi xảy ra. Hãy thử lại sau.');
+                    }
+                });
+            });
+        });
+        </script>
+        <?php
     }
 
     /**
