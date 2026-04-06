@@ -12,9 +12,15 @@ class FeatureController
     {
         add_action('init', [$this, 'bootstrap_frontend_features'], 1);
         add_action('template_redirect', [$this, 'maybe_start_output_buffer'], 0);
+        add_action('wp_head', [$this, 'maybe_print_preload_links'], 1);
         add_action('save_post', [$this, 'maybe_set_auto_featured_image'], 20, 3);
 
         add_filter('the_content', [$this, 'inject_toc_into_content'], 20);
+        add_filter('wp_headers', [$this, 'filter_browser_cache_headers']);
+        add_filter('script_loader_tag', [$this, 'filter_script_loader_tag'], 10, 3);
+        add_filter('style_loader_src', [$this, 'maybe_rewrite_cdn_url'], 20, 2);
+        add_filter('script_loader_src', [$this, 'maybe_rewrite_cdn_url'], 20, 2);
+        add_filter('wp_get_attachment_url', [$this, 'maybe_rewrite_attachment_url'], 20, 2);
 
         add_filter('use_block_editor_for_post_type', [$this, 'maybe_disable_block_editor'], 10, 2);
         add_filter('mce_buttons', [$this, 'extend_tinymce_buttons']);
@@ -66,6 +72,135 @@ class FeatureController
                 ');
             }, 20);
         }
+    }
+
+    /**
+     * Bo sung cache headers cho frontend.
+     */
+    public function filter_browser_cache_headers($headers)
+    {
+        if (is_admin() || wp_doing_ajax() || is_feed()) {
+            return $headers;
+        }
+
+        if (!$this->get_setting('enable_browser_cache_headers', true)) {
+            return $headers;
+        }
+
+        $headers['Cache-Control'] = 'public, max-age=31536000, s-maxage=31536000';
+        $headers['Vary'] = isset($headers['Vary']) ? $headers['Vary'] . ', Accept-Encoding' : 'Accept-Encoding';
+
+        return $headers;
+    }
+
+    /**
+     * Them defer cho cac script khong thiet yeu.
+     */
+    public function filter_script_loader_tag($tag, $handle, $src)
+    {
+        if (is_admin()) {
+            return $tag;
+        }
+
+        if (!$this->get_setting('defer_noncritical_js', false)) {
+            return $tag;
+        }
+
+        $excluded = [
+            'jquery',
+            'jquery-core',
+            'jquery-migrate',
+            'wp-polyfill',
+            'wp-hooks',
+            'wp-element',
+            'wp-i18n',
+            'wp-api-request',
+            'wp-emoji-release',
+            'admin-bar',
+        ];
+
+        if (in_array($handle, $excluded, true)) {
+            return $tag;
+        }
+
+        if (strpos($tag, ' defer') === false && strpos($tag, ' async') === false) {
+            $tag = str_replace('<script ', '<script defer ', $tag);
+        }
+
+        return $tag;
+    }
+
+    /**
+     * Print preload/preconnect hints tu setting.
+     */
+    public function maybe_print_preload_links()
+    {
+        if (is_admin() || !$this->get_setting('enable_preload_hints', false)) {
+            return;
+        }
+
+        $assets = preg_split('/\r\n|\r|\n|,/', (string) $this->get_setting('preload_assets', ''));
+        $assets = array_values(array_filter(array_map('trim', (array) $assets)));
+
+        foreach ($assets as $asset) {
+            $asset = esc_url($asset);
+            if ($asset === '') {
+                continue;
+            }
+
+            $as = 'image';
+            $path = wp_parse_url($asset, PHP_URL_PATH) ?: '';
+            if (preg_match('/\.(?:css)$/i', $path)) {
+                $as = 'style';
+            } elseif (preg_match('/\.(?:js)$/i', $path)) {
+                $as = 'script';
+            } elseif (preg_match('/\.(?:woff2?|ttf|otf)$/i', $path)) {
+                $as = 'font';
+            }
+
+            echo '<link rel="preload" href="' . esc_url($asset) . '" as="' . esc_attr($as) . '" crossorigin="anonymous">' . "\n";
+        }
+    }
+
+    /**
+     * Rewrite asset url sang CDN neu da cau hinh.
+     */
+    public function maybe_rewrite_cdn_url($url, $handle = null)
+    {
+        $cdn_url = trim((string) $this->get_setting('cdn_url', ''));
+        if ($cdn_url === '' || is_admin() || wp_doing_ajax()) {
+            return $url;
+        }
+
+        return $this->replace_origin_with_cdn($url, $cdn_url);
+    }
+
+    /**
+     * Rewrite attachment url sang CDN neu da cau hinh.
+     */
+    public function maybe_rewrite_attachment_url($url, $post_id)
+    {
+        $cdn_url = trim((string) $this->get_setting('cdn_url', ''));
+        if ($cdn_url === '' || is_admin() || wp_doing_ajax()) {
+            return $url;
+        }
+
+        return $this->replace_origin_with_cdn($url, $cdn_url);
+    }
+
+    /**
+     * Thay origin sang CDN base.
+     */
+    private function replace_origin_with_cdn($url, $cdn_url)
+    {
+        $site_url = rtrim(home_url(), '/');
+        $cdn_url = rtrim($cdn_url, '/');
+
+        if (stripos($url, $site_url) === 0) {
+            return $cdn_url . substr($url, strlen($site_url));
+        }
+
+        return $url;
     }
 
     /**
