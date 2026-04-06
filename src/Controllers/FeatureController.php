@@ -117,7 +117,7 @@ class FeatureController
         }
 
         $post_type = get_post_type();
-        $allowed_types = $this->get_setting('toc_post_types', ['post', 'page']);
+        $allowed_types = $this->get_setting('toc_post_types', $this->get_toc_post_types());
         if (!in_array($post_type, (array) $allowed_types, true)) {
             return $content;
         }
@@ -287,6 +287,18 @@ class FeatureController
         $settings = get_option('wps_main_settings', []);
 
         return $settings[$key] ?? $default;
+    }
+
+    /**
+     * Danh sách post type public cho mục lục tự động.
+     */
+    private function get_toc_post_types()
+    {
+        $post_types = get_post_types(['public' => true], 'names');
+        $post_types = is_array($post_types) ? array_keys($post_types) : [];
+        $excluded = ['attachment', 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset', 'oembed_cache', 'user_request'];
+
+        return array_values(array_diff($post_types, $excluded));
     }
 }
 
