@@ -6,7 +6,7 @@ namespace Acma\WpSecurity\Controllers;
 use Acma\WpSecurity\Services\SecurityService;
 
 /**
- * Controller quan ly cac hook bao mat
+ * Controller quản lý các hook bảo mật.
  */
 class SecurityController
 {
@@ -29,12 +29,11 @@ class SecurityController
     }
 
     /**
-     * Dang ky cac WordPress hooks
+     * Đăng ký các WordPress hooks.
      */
     private function init_hooks()
     {
         add_action('init', [$this, 'handle_security_checks'], 1);
-
         add_action('init', [$this, 'handle_rename_login']);
         add_filter('site_url', [$this, 'fix_login_urls'], 10, 4);
         add_filter('network_site_url', [$this, 'fix_login_urls'], 10, 4);
@@ -54,8 +53,8 @@ class SecurityController
 
         if ($this->security_service->get_setting('block_author_scan', true)) {
             if (!is_admin() && isset($_GET['author'])) {
-                $this->security_service->log_event('author_scan', 'Phat hien hanh vi quet tac gia');
-                wp_die('Author scanning is disabled for security reasons.', 'Security Error', ['response' => 403]);
+                $this->security_service->log_event('author_scan', __('Phát hiện hành vi quét tác giả', 'wp-plugin-security'));
+                wp_die(__('Quét tác giả đã bị vô hiệu hóa vì lý do bảo mật.', 'wp-plugin-security'), __('Lỗi bảo mật', 'wp-plugin-security'), ['response' => 403]);
             }
         }
 
@@ -66,7 +65,7 @@ class SecurityController
                 }
 
                 if (!is_user_logged_in()) {
-                    return new \WP_Error('rest_forbidden', 'REST API is restricted.', ['status' => 401]);
+                    return new \WP_Error('rest_forbidden', __('REST API chỉ dành cho người dùng đã đăng nhập.', 'wp-plugin-security'), ['status' => 401]);
                 }
 
                 return $result;
@@ -83,7 +82,7 @@ class SecurityController
 
         if ($this->security_service->get_setting('mask_login_errors', true)) {
             add_filter('login_errors', function () {
-                return 'Sai thong tin dang nhap. Vui long thu lai.';
+                return __('Sai thông tin đăng nhập. Vui lòng thử lại.', 'wp-plugin-security');
             });
         }
 
@@ -95,7 +94,7 @@ class SecurityController
     }
 
     /**
-     * Dang ky cac hook theo doi hoat dong.
+     * Đăng ký các hook theo dõi hoạt động.
      */
     private function init_audit_hooks()
     {
@@ -104,35 +103,35 @@ class SecurityController
         }
 
         add_action('wp_login', function ($user_login, $user) {
-            $this->audit_service->log('login', "Nguoi dung $user_login da dang nhap", $user->ID);
+            $this->audit_service->log('login', sprintf(__('Người dùng %s đã đăng nhập', 'wp-plugin-security'), $user_login), $user->ID);
         }, 10, 2);
 
         add_action('wp_logout', function () {
             $user_id = get_current_user_id();
-            $this->audit_service->log('logout', 'Nguoi dung da dang xuat', $user_id);
+            $this->audit_service->log('logout', __('Người dùng đã đăng xuất', 'wp-plugin-security'), $user_id);
         });
 
         add_action('switch_theme', function ($new_name) {
-            $this->audit_service->log('theme_change', "Doi giao dien sang: $new_name");
+            $this->audit_service->log('theme_change', sprintf(__('Đổi giao diện sang: %s', 'wp-plugin-security'), $new_name));
         });
 
         add_action('activated_plugin', function ($plugin) {
-            $this->audit_service->log('plugin_activate', "Kich hoat plugin: $plugin");
+            $this->audit_service->log('plugin_activate', sprintf(__('Kích hoạt plugin: %s', 'wp-plugin-security'), $plugin));
         });
 
         add_action('deactivated_plugin', function ($plugin) {
-            $this->audit_service->log('plugin_deactivate', "Huy kich hoat plugin: $plugin");
+            $this->audit_service->log('plugin_deactivate', sprintf(__('Hủy kích hoạt plugin: %s', 'wp-plugin-security'), $plugin));
         });
 
         add_action('save_post', function ($post_id, $post, $update) {
             if ($update) {
-                $this->audit_service->log('post_update', 'Cap nhat bai viet: ' . get_the_title($post_id));
+                $this->audit_service->log('post_update', sprintf(__('Cập nhật bài viết: %s', 'wp-plugin-security'), get_the_title($post_id)));
             }
         }, 10, 3);
     }
 
     /**
-     * Xu ly Rename Login Page
+     * Xử lý Rename Login Page.
      */
     public function handle_rename_login()
     {
@@ -157,7 +156,7 @@ class SecurityController
     }
 
     /**
-     * Sua URL dang nhap trong toan trang
+     * Sửa URL đăng nhập trong toàn trang.
      */
     public function fix_login_urls($url, $path, $scheme, $blog_id)
     {
@@ -174,7 +173,7 @@ class SecurityController
     }
 
     /**
-     * Xu ly Idle Logout
+     * Xử lý Idle Logout.
      */
     public function handle_idle_logout()
     {
@@ -182,7 +181,7 @@ class SecurityController
     }
 
     /**
-     * Kiem tra mat khau manh khi sua ho so nguoi dung.
+     * Kiểm tra mật khẩu mạnh khi sửa hồ sơ người dùng.
      */
     public function check_strong_password($errors, $update, $user)
     {
@@ -192,12 +191,12 @@ class SecurityController
         }
 
         if (!$this->is_strong_password($password)) {
-            $errors->add('weak_password', '<strong>Loi:</strong> Mat khau phai dai it nhat 12 ky tu, bao gom chu hoa, so va ky tu dac biet.');
+            $errors->add('weak_password', '<strong>' . esc_html__('Lỗi:', 'wp-plugin-security') . '</strong> ' . esc_html__('Mật khẩu phải dài ít nhất 12 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt.', 'wp-plugin-security'));
         }
     }
 
     /**
-     * Kiem tra mat khau manh khi reset password.
+     * Kiểm tra mật khẩu mạnh khi reset password.
      */
     public function check_password_reset_strength($errors, $user)
     {
@@ -207,29 +206,29 @@ class SecurityController
         }
 
         if (!$this->is_strong_password($password)) {
-            $errors->add('weak_password', '<strong>Loi:</strong> Mat khau phai dai it nhat 12 ky tu, bao gom chu hoa, so va ky tu dac biet.');
+            $errors->add('weak_password', '<strong>' . esc_html__('Lỗi:', 'wp-plugin-security') . '</strong> ' . esc_html__('Mật khẩu phải dài ít nhất 12 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt.', 'wp-plugin-security'));
         }
     }
 
     /**
-     * Thuc hien cac kiem tra bao mat.
+     * Thực hiện các kiểm tra bảo mật.
      */
     public function handle_security_checks()
     {
         $user_ip = $_SERVER['REMOTE_ADDR'] ?? '';
         if ($this->security_service->is_ip_blocked($user_ip)) {
-            $this->security_service->log_event('ip_blocked', "IP $user_ip co gang truy cap");
-            wp_die('Truy cap bi chan boi WP Plugin Security!', 'Access Denied', ['response' => 403]);
+            $this->security_service->log_event('ip_blocked', sprintf(__('IP %s cố gắng truy cập', 'wp-plugin-security'), $user_ip));
+            wp_die(__('Truy cập bị chặn bởi WP Plugin Security!', 'wp-plugin-security'), __('Truy cập bị từ chối', 'wp-plugin-security'), ['response' => 403]);
         }
 
         if ($this->security_service->is_dangerous_request()) {
-            $this->security_service->log_event('dangerous_request', "Phat hien request nguy hiem tu IP $user_ip");
-            wp_die('Phat hien hanh vi nguy hiem!', 'Security Warning', ['response' => 400]);
+            $this->security_service->log_event('dangerous_request', sprintf(__('Phát hiện request nguy hiểm từ IP %s', 'wp-plugin-security'), $user_ip));
+            wp_die(__('Phát hiện hành vi nguy hiểm!', 'wp-plugin-security'), __('Cảnh báo bảo mật', 'wp-plugin-security'), ['response' => 400]);
         }
     }
 
     /**
-     * Xu ly dang nhap that bai.
+     * Xử lý đăng nhập thất bại.
      */
     public function handle_failed_login($username)
     {
@@ -238,20 +237,20 @@ class SecurityController
     }
 
     /**
-     * Kiem tra trang thai khoa dang nhap.
+     * Kiểm tra trạng thái khóa đăng nhập.
      */
     public function check_login_lockout($user, $username, $password)
     {
         $ip = $_SERVER['REMOTE_ADDR'] ?? '';
         if (!$this->security_service->check_login_attempts($ip)) {
-            return new \WP_Error('locked_out', 'IP cua ban tam thoi bi khoa do thu sai qua nhieu lan.');
+            return new \WP_Error('locked_out', __('IP của bạn tạm thời bị khóa do thử sai quá nhiều lần.', 'wp-plugin-security'));
         }
 
         return $user;
     }
 
     /**
-     * Them cac headers bao mat vao response.
+     * Thêm các headers bảo mật vào response.
      */
     public function add_security_headers($headers)
     {
@@ -264,7 +263,7 @@ class SecurityController
     }
 
     /**
-     * Bao ve trang cau hinh cua plugin trong admin.
+     * Bảo vệ trang cấu hình của plugin trong admin.
      */
     public function protect_admin_area()
     {
@@ -277,7 +276,7 @@ class SecurityController
     }
 
     /**
-     * Kiem tra password co dat yeu cau do manh hay khong.
+     * Kiểm tra password có đạt yêu cầu độ mạnh hay không.
      */
     private function is_strong_password($password)
     {

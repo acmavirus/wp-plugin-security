@@ -6,7 +6,7 @@ namespace Acma\WpSecurity\Controllers;
 use Acma\WpSecurity\Services\UpdateService;
 
 /**
- * Controller xử lý các hooks liên quan đến cập nhật plugin
+ * Controller xử lý các hooks liên quan đến cập nhật plugin.
  */
 class UpdateController
 {
@@ -20,27 +20,19 @@ class UpdateController
 
     private function init_hooks()
     {
-        // Hook vào quá trình kiểm tra cập nhật của WordPress
         add_filter('pre_set_site_transient_update_plugins', [$this->update_service, 'check_for_update']);
-
-        // Hiển thị thông tin chi tiết plugin
         add_filter('plugins_api', [$this, 'plugin_info'], 20, 3);
-
-        // Sửa lỗi cấu trúc thư mục GitHub (thư mục con sau khi giải nén)
         add_filter('upgrader_source_selection', [$this->update_service, 'fix_source_selection'], 10, 4);
-
-        // Ajax handler for Check Update button
         add_action('wp_ajax_wps_check_update', [$this, 'ajax_check_update']);
     }
 
     /**
-     * Handle AJAX Check Update
+     * Xử lý AJAX Check Update.
      */
     public function ajax_check_update()
     {
         check_ajax_referer('wps_check_update_nonce', 'nonce');
 
-        // Force clear update transient
         delete_site_transient('update_plugins');
 
         $remote = $this->update_service->get_remote_version();
@@ -53,19 +45,19 @@ class UpdateController
 
         if ($remote && version_compare($current_version, $remote->version, '<')) {
             wp_send_json_success([
-                'message' => 'Có phiên bản mới: v' . $remote->version . '. Đang tải lại trang...',
-                'has_update' => true
+                'message' => sprintf(__('Có phiên bản mới: v%s. Đang tải lại trang...', 'wp-plugin-security'), $remote->version),
+                'has_update' => true,
             ]);
         } else {
             wp_send_json_success([
-                'message' => 'Bạn đang sử dụng phiên bản mới nhất (' . $current_version . ')!',
-                'has_update' => false
+                'message' => sprintf(__('Bạn đang sử dụng phiên bản mới nhất (%s)!', 'wp-plugin-security'), $current_version),
+                'has_update' => false,
             ]);
         }
     }
 
     /**
-     * Cung cấp thông tin plugin cho modal popup của WordPress
+     * Cung cấp thông tin plugin cho modal popup của WordPress.
      */
     public function plugin_info($res, $action, $args)
     {
@@ -88,8 +80,8 @@ class UpdateController
         $res->homepage = $remote->url;
         $res->download_link = $remote->zip_url;
         $res->sections = [
-            'description' => 'Giải pháp bảo mật toàn diện cho WordPress. Cập nhật tự động trực tiếp từ GitHub Releases.',
-            'changelog' => $remote->body ?? 'Theo dõi các thay đổi mới nhất tại: ' . $remote->url
+            'description' => __('Giải pháp bảo mật toàn diện cho WordPress. Cập nhật trực tiếp từ GitHub Releases.', 'wp-plugin-security'),
+            'changelog' => $remote->body ?? sprintf(__('Theo dõi các thay đổi mới nhất tại: %s', 'wp-plugin-security'), $remote->url),
         ];
 
         return $res;

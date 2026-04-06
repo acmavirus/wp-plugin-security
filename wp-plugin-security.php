@@ -3,8 +3,8 @@
 /**
  * Plugin Name: WP Plugin Security
  * Plugin URI:  https://github.com/acmavirus/wp-plugin-security
- * Description: Giải pháp bảo mật toàn diện cho WordPress dựa trên kiến trúc Clean Architecture.
- * Version:     3.0.12
+ * Description: Plugin bảo mật WordPress đa ngôn ngữ được xây dựng theo kiến trúc sạch.
+ * Version:     3.0.13
  * Author:      AcmaTvirus
  * Author URI:  https://thuc.me
  * License:     GPL2
@@ -14,29 +14,29 @@
  * Copyright by AcmaTvirus
  */
 
-// Ngăn chặn truy cập trực tiếp
+// Prevent direct access.
 if (!defined('ABSPATH')) {
     exit;
 }
 
-// Định nghĩa hằng số
+// Define plugin constants.
 if (!defined('WPS_PLUGIN_FILE')) {
     define('WPS_PLUGIN_FILE', __FILE__);
 }
 
-// Nạp Autoloader từ Composer
+// Load Composer autoloader.
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
 /**
- * Khởi tạo Plugin ngay lập tức
+ * Boot the plugin.
  */
 if (class_exists('Acma\\WpSecurity\\Plugin')) {
     \Acma\WpSecurity\Plugin::instance()->run();
 } else {
     add_action('admin_notices', function () {
-        echo '<div class="notice notice-error"><p><strong>WP Plugin Security:</strong> Hệ thống Autoload không hoạt động hoặc không tìm thấy Class chính. Vui lòng kiểm tra lại thư mục <code>vendor</code>.</p></div>';
+        echo '<div class="notice notice-error"><p><strong>' . esc_html__('WP Plugin Security', 'wp-plugin-security') . ':</strong> ' . esc_html__('Autoload thất bại hoặc không tìm thấy class chính. Vui lòng kiểm tra thư mục <code>vendor</code>.', 'wp-plugin-security') . '</p></div>';
     });
 }
 

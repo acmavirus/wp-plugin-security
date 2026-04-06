@@ -4,7 +4,7 @@
 namespace Acma\WpSecurity;
 
 /**
- * Class chính của Plugin
+ * Class chính của plugin.
  */
 class Plugin
 {
@@ -14,8 +14,8 @@ class Plugin
     private static $instance;
 
     /**
-     * Trả về instance duy nhất của plugin
-     * 
+     * Trả về instance duy nhất của plugin.
+     *
      * @return Plugin
      */
     public static function instance()
@@ -23,23 +23,36 @@ class Plugin
         if (self::$instance === null) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 
     /**
-     * Khởi chạy plugin
+     * Khởi chạy plugin.
      */
     public function run()
     {
-        // Nạp text domain
-        add_action('init', function () {
-            load_plugin_textdomain('wp-plugin-security', false, dirname(plugin_basename(WPS_PLUGIN_FILE)) . '/languages');
-        });
+        add_action('plugins_loaded', [$this, 'load_textdomain']);
 
-        // Khởi tạo các controller
         new Controllers\SecurityController();
+        new Controllers\FeatureController();
+        new Controllers\IntegrationController();
+        new Controllers\UserController();
+        new Controllers\SeoAiController();
         new Controllers\AdminController();
         new Controllers\UpdateController();
+    }
+
+    /**
+     * Nạp text domain để hỗ trợ đa ngôn ngữ.
+     */
+    public function load_textdomain()
+    {
+        load_plugin_textdomain(
+            'wp-plugin-security',
+            false,
+            dirname(plugin_basename(WPS_PLUGIN_FILE)) . '/languages'
+        );
     }
 }
 

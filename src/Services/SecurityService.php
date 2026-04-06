@@ -170,7 +170,7 @@ class SecurityService
     public function log_event($type, $message, $ip = null)
     {
         if (!$ip) {
-            $ip = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
+        $ip = $_SERVER['REMOTE_ADDR'] ?? __('Không xác định', 'wp-plugin-security');
         }
 
         $logs = get_option('wps_security_logs', []);
@@ -179,7 +179,7 @@ class SecurityService
             'type' => $type,
             'ip' => $ip,
             'message' => $message,
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown'
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? __('Không xác định', 'wp-plugin-security')
         ];
 
         array_unshift($logs, $new_log);

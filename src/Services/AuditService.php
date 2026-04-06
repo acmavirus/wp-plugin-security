@@ -4,13 +4,13 @@
 namespace Acma\WpSecurity\Services;
 
 /**
- * Service ghi lại mọi hoạt động trên website (Audit Trail)
+ * Service ghi lại mọi hoạt động trên website (Audit Trail).
  */
 class AuditService
 {
     /**
-     * Ghi lại một sự kiện hoạt động
-     * 
+     * Ghi lại một sự kiện hoạt động.
+     *
      * @param string $action Hành động (login, logout, post_update, plugin_activate...)
      * @param string $message Thông báo chi tiết
      * @param int|null $user_id ID người dùng thực hiện
@@ -22,8 +22,8 @@ class AuditService
         }
 
         $user_info = get_userdata($user_id);
-        $username = $user_info ? $user_info->user_login : 'Guest';
-        $ip = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
+        $username = $user_info ? $user_info->user_login : __('Khách', 'wp-plugin-security');
+        $ip = $_SERVER['REMOTE_ADDR'] ?? __('Không xác định', 'wp-plugin-security');
 
         $logs = get_option('wps_audit_logs', []);
         $new_log = [
@@ -31,16 +31,16 @@ class AuditService
             'user'    => $username,
             'action'  => $action,
             'message' => $message,
-            'ip'      => $ip
+            'ip'      => $ip,
         ];
 
         array_unshift($logs, $new_log);
-        $logs = array_slice($logs, 0, 500); // Lưu 500 log hoạt động
+        $logs = array_slice($logs, 0, 500);
         update_option('wps_audit_logs', $logs);
     }
 
     /**
-     * Lấy danh sách log
+     * Lấy danh sách log.
      */
     public function get_logs($limit = 100)
     {
