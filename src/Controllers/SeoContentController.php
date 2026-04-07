@@ -51,13 +51,13 @@ class SeoContentController
     public function ajax_bulk_queue()
     {
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(['message' => __('Bạn không có quyền quét SEO Content.', 'wp-plugin-security')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền quét SEO Content.', 'acma-security-shield')], 403);
         }
 
         check_ajax_referer('wps_seo_content_bulk_scan', 'nonce');
 
         if (!$this->get_setting('seo_content_enabled', false)) {
-            wp_send_json_error(['message' => __('Hãy bật SEO Content trước khi quét.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Hãy bật SEO Content trước khi quét.', 'acma-security-shield')], 400);
         }
 
         wp_send_json_success([
@@ -72,32 +72,32 @@ class SeoContentController
     public function ajax_bulk_process_post()
     {
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(['message' => __('Bạn không có quyền quét SEO Content.', 'wp-plugin-security')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền quét SEO Content.', 'acma-security-shield')], 403);
         }
 
         check_ajax_referer('wps_seo_content_bulk_scan', 'nonce');
 
         if (!$this->get_setting('seo_content_enabled', false)) {
-            wp_send_json_error(['message' => __('Hãy bật SEO Content trước khi quét.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Hãy bật SEO Content trước khi quét.', 'acma-security-shield')], 400);
         }
 
         $post_id = absint($_POST['post_id'] ?? 0);
         if (!$post_id) {
-            wp_send_json_error(['message' => __('Thiếu post ID.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Thiếu post ID.', 'acma-security-shield')], 400);
         }
 
         $post = get_post($post_id);
         if (!$post) {
-            wp_send_json_error(['message' => __('Không tìm thấy bài viết.', 'wp-plugin-security')], 404);
+            wp_send_json_error(['message' => __('Không tìm thấy bài viết.', 'acma-security-shield')], 404);
         }
 
         if (!current_user_can('edit_post', $post_id)) {
-            wp_send_json_error(['message' => __('Bạn không có quyền chỉnh sửa bài viết này.', 'wp-plugin-security')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền chỉnh sửa bài viết này.', 'acma-security-shield')], 403);
         }
 
         $allowed_types = (array) $this->get_setting('seo_content_post_types', $this->get_allowed_post_types());
         if (!in_array($post->post_type, $allowed_types, true)) {
-            wp_send_json_error(['message' => __('Loại bài viết này chưa được bật cho SEO Content.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Loại bài viết này chưa được bật cho SEO Content.', 'acma-security-shield')], 400);
         }
 
         $payload = $this->generate_ai_content($post, $post->post_title, $post->post_content);
@@ -111,8 +111,8 @@ class SeoContentController
             'post_id' => $post_id,
             'title' => $post->post_title,
             'message' => $payload['source'] === 'gemini'
-                ? __('Đã viết lại nội dung bằng Gemini.', 'wp-plugin-security')
-                : __('Đã tối ưu nội dung bằng logic nội bộ.', 'wp-plugin-security'),
+                ? __('Đã viết lại nội dung bằng Gemini.', 'acma-security-shield')
+                : __('Đã tối ưu nội dung bằng logic nội bộ.', 'acma-security-shield'),
             'score' => (int) get_post_meta($post_id, '_wps_seo_content_score', true),
             'source' => $payload['source'],
         ]);
@@ -207,18 +207,18 @@ class SeoContentController
 
         $code = wp_remote_retrieve_response_code($response);
         if ($code < 200 || $code >= 300) {
-            return new \WP_Error('wps_gemini_http_error', sprintf(__('Gemini trả về lỗi HTTP %d.', 'wp-plugin-security'), $code));
+            return new \WP_Error('wps_gemini_http_error', sprintf(__('Gemini trả về lỗi HTTP %d.', 'acma-security-shield'), $code));
         }
 
         $data = json_decode(wp_remote_retrieve_body($response), true);
         $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
         if ($text === '') {
-            return new \WP_Error('wps_gemini_empty', __('Gemini không trả về nội dung hợp lệ.', 'wp-plugin-security'));
+            return new \WP_Error('wps_gemini_empty', __('Gemini không trả về nội dung hợp lệ.', 'acma-security-shield'));
         }
 
         $json = $this->parse_json_payload($text);
         if (!is_array($json)) {
-            return new \WP_Error('wps_gemini_parse_error', __('Không thể đọc JSON từ Gemini.', 'wp-plugin-security'));
+            return new \WP_Error('wps_gemini_parse_error', __('Không thể đọc JSON từ Gemini.', 'acma-security-shield'));
         }
 
         return $json;
@@ -351,7 +351,7 @@ class SeoContentController
         $html = [];
         $html[] = '<p>' . esc_html($title) . ' là chủ đề đáng chú ý với các điểm chính được trình bày rõ ràng bên dưới.</p>';
         $html[] = '<p>' . esc_html($intro) . '</p>';
-        $html[] = '<h2>' . esc_html__('Điểm chính', 'wp-plugin-security') . '</h2>';
+        $html[] = '<h2>' . esc_html__('Điểm chính', 'acma-security-shield') . '</h2>';
         $html[] = '<ul>';
         foreach ($highlights as $item) {
             $html[] = '<li>' . esc_html($item) . '</li>';
@@ -359,11 +359,11 @@ class SeoContentController
         $html[] = '</ul>';
 
         if (!empty($sentences)) {
-            $html[] = '<h2>' . esc_html__('Chi tiết mở rộng', 'wp-plugin-security') . '</h2>';
+            $html[] = '<h2>' . esc_html__('Chi tiết mở rộng', 'acma-security-shield') . '</h2>';
             $html[] = '<p>' . esc_html(implode(' ', $sentences)) . '</p>';
         }
 
-        $html[] = '<p>' . esc_html__('Phần nội dung trên đã được làm lại để dễ đọc hơn, có cấu trúc rõ ràng hơn và phù hợp với SEO on-page.', 'wp-plugin-security') . '</p>';
+        $html[] = '<p>' . esc_html__('Phần nội dung trên đã được làm lại để dễ đọc hơn, có cấu trúc rõ ràng hơn và phù hợp với SEO on-page.', 'acma-security-shield') . '</p>';
 
         return implode("\n", $html);
     }

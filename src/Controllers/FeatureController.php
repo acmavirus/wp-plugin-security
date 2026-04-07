@@ -262,7 +262,7 @@ class FeatureController
             return $content;
         }
 
-        $toc_title = $this->get_setting('toc_title', __('Mục lục', 'wp-plugin-security'));
+        $toc_title = $this->get_setting('toc_title', __('Mục lục', 'acma-security-shield'));
         $toc_items = [];
         $index = 1;
 

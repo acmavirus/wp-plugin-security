@@ -136,15 +136,15 @@ class UserController
 
         $avatar_url = get_user_meta($user->ID, 'wps_local_avatar', true);
         ?>
-        <h2><?php esc_html_e('Ảnh đại diện cục bộ', 'wp-plugin-security'); ?></h2>
+        <h2><?php esc_html_e('Ảnh đại diện cục bộ', 'acma-security-shield'); ?></h2>
         <table class="form-table" role="presentation">
             <tr>
-                <th><label for="wps_local_avatar"><?php esc_html_e('URL ảnh đại diện', 'wp-plugin-security'); ?></label></th>
+                <th><label for="wps_local_avatar"><?php esc_html_e('URL ảnh đại diện', 'acma-security-shield'); ?></label></th>
                 <td>
                     <img class="wps-avatar-preview" src="<?php echo esc_url($avatar_url ?: get_avatar_url($user->ID)); ?>" style="width:72px;height:72px;border-radius:999px;object-fit:cover;display:block;margin-bottom:12px;" alt="">
                     <input type="text" class="regular-text wps-avatar-url" id="wps_local_avatar" name="wps_local_avatar" value="<?php echo esc_attr($avatar_url); ?>">
-                    <p><button class="button wps-avatar-upload"><?php esc_html_e('Chọn từ Thư viện', 'wp-plugin-security'); ?></button></p>
-                    <p class="description"><?php esc_html_e('Ảnh đại diện cục bộ được lưu trong thư viện media của site, không cần Gravatar.', 'wp-plugin-security'); ?></p>
+                    <p><button class="button wps-avatar-upload"><?php esc_html_e('Chọn từ Thư viện', 'acma-security-shield'); ?></button></p>
+                    <p class="description"><?php esc_html_e('Ảnh đại diện cục bộ được lưu trong thư viện media của site, không cần Gravatar.', 'acma-security-shield'); ?></p>
                 </td>
             </tr>
         </table>
@@ -192,30 +192,30 @@ class UserController
         $issuer = get_bloginfo('name');
         $uri = $secret !== '' ? $this->security_service->get_two_factor_provisioning_uri($issuer, $user->user_login, $secret) : '';
         ?>
-        <h2><?php esc_html_e('Xác thực 2 lớp', 'wp-plugin-security'); ?></h2>
+        <h2><?php esc_html_e('Xác thực 2 lớp', 'acma-security-shield'); ?></h2>
         <table class="form-table" role="presentation">
             <tr>
-                <th scope="row"><?php esc_html_e('Bật 2FA', 'wp-plugin-security'); ?></th>
+                <th scope="row"><?php esc_html_e('Bật 2FA', 'acma-security-shield'); ?></th>
                 <td>
                     <label>
                         <input type="checkbox" name="wps_2fa_enabled" value="1" <?php checked($enabled); ?>>
-                        <?php esc_html_e('Yêu cầu mã xác thực 2FA khi đăng nhập', 'wp-plugin-security'); ?>
+                        <?php esc_html_e('Yêu cầu mã xác thực 2FA khi đăng nhập', 'acma-security-shield'); ?>
                     </label>
-                    <p class="description"><?php esc_html_e('Mã 2FA sẽ được kiểm tra trên form đăng nhập bằng ứng dụng như Google Authenticator hoặc Authy.', 'wp-plugin-security'); ?></p>
+                    <p class="description"><?php esc_html_e('Mã 2FA sẽ được kiểm tra trên form đăng nhập bằng ứng dụng như Google Authenticator hoặc Authy.', 'acma-security-shield'); ?></p>
                 </td>
             </tr>
             <tr>
-                <th scope="row"><?php esc_html_e('Secret 2FA', 'wp-plugin-security'); ?></th>
+                <th scope="row"><?php esc_html_e('Secret 2FA', 'acma-security-shield'); ?></th>
                 <td>
                     <input type="text" class="regular-text code" name="wps_2fa_secret" value="<?php echo esc_attr($secret); ?>" autocomplete="off">
-                    <p class="description"><?php esc_html_e('Quét thủ công hoặc nhập secret này vào ứng dụng authenticator của bạn.', 'wp-plugin-security'); ?></p>
+                    <p class="description"><?php esc_html_e('Quét thủ công hoặc nhập secret này vào ứng dụng authenticator của bạn.', 'acma-security-shield'); ?></p>
                 </td>
             </tr>
             <tr>
-                <th scope="row"><?php esc_html_e('URI cài đặt', 'wp-plugin-security'); ?></th>
+                <th scope="row"><?php esc_html_e('URI cài đặt', 'acma-security-shield'); ?></th>
                 <td>
                     <input type="text" class="large-text code" readonly value="<?php echo esc_attr($uri); ?>">
-                    <p class="description"><?php esc_html_e('Có thể dùng URI này cho QR code bên ngoài hoặc nhập trực tiếp.', 'wp-plugin-security'); ?></p>
+                    <p class="description"><?php esc_html_e('Có thể dùng URI này cho QR code bên ngoài hoặc nhập trực tiếp.', 'acma-security-shield'); ?></p>
                 </td>
             </tr>
         </table>
@@ -294,7 +294,7 @@ class UserController
 
     public function add_user_id_column($columns)
     {
-        $columns['wps_user_id'] = __('Mã người dùng', 'wp-plugin-security');
+        $columns['wps_user_id'] = __('Mã người dùng', 'acma-security-shield');
         return $columns;
     }
 

@@ -3,7 +3,7 @@
 Tài liệu này mô tả cách tái dựng plugin theo đúng mã nguồn hiện tại. Không dựa vào mô tả cũ của một plugin khác.
 
 ## 1. Bootstrap
-- File entry: `wp-plugin-security.php`.
+- File entry: `acma-security-shield.php`.
 - Khai báo plugin header chuẩn WordPress.
 - Định nghĩa `WPS_PLUGIN_FILE`.
 - Load `vendor/autoload.php` nếu tồn tại.

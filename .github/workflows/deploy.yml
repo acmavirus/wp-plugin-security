@@ -32,7 +32,7 @@ jobs:
       - name: Get current date/version
         id: vars
         run: |
-          VERSION=$(grep "Version:" wp-plugin-security.php | awk '{print $NF}')
+          VERSION=$(grep "Version:" acma-security-shield.php | awk '{print $NF}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             echo "is_tag=true" >> $GITHUB_OUTPUT
@@ -45,14 +45,14 @@ jobs:
       - name: Create Zip Package (Standard Structure)
         run: |
           # Tạo thư mục gốc cố định để tránh WordPress dùng tên file Zip làm tên thư mục
-          mkdir wp-plugin-security
-          cp -r src vendor wp-plugin-security.php wp-plugin-security/
+          mkdir acma-security-shield
+          cp -r src vendor acma-security-shield.php acma-security-shield/
           
           # Nén thư mục này
-          zip -r wp-plugin-security-${{ steps.vars.outputs.version }}.zip wp-plugin-security/
+          zip -r acma-security-shield-${{ steps.vars.outputs.version }}.zip acma-security-shield/
           
           # Kiểm tra cấu trúc zip
-          unzip -l wp-plugin-security-${{ steps.vars.outputs.version }}.zip | head -n 10
+          unzip -l acma-security-shield-${{ steps.vars.outputs.version }}.zip | head -n 10
 
       - name: Check if Tag exists
         id: check_tag
@@ -72,7 +72,7 @@ jobs:
         with:
           tag_name: ${{ steps.vars.outputs.tag_name }}
           name: Release ${{ steps.vars.outputs.tag_name }}
-          files: wp-plugin-security-${{ steps.vars.outputs.version }}.zip
+          files: acma-security-shield-${{ steps.vars.outputs.version }}.zip
           generate_release_notes: true
           draft: false
           prerelease: false
@@ -82,7 +82,7 @@ jobs:
       - name: Update Latest Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wp-plugin-security-latest
-          path: wp-plugin-security-${{ steps.vars.outputs.version }}.zip
+          name: acma-security-shield-latest
+          path: acma-security-shield-${{ steps.vars.outputs.version }}.zip
 
 # Copyright by AcmaTvirus

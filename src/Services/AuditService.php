@@ -22,8 +22,8 @@ class AuditService
         }
 
         $user_info = get_userdata($user_id);
-        $username = $user_info ? $user_info->user_login : __('Khách', 'wp-plugin-security');
-        $ip = $_SERVER['REMOTE_ADDR'] ?? __('Không xác định', 'wp-plugin-security');
+        $username = $user_info ? $user_info->user_login : __('Khách', 'acma-security-shield');
+        $ip = $_SERVER['REMOTE_ADDR'] ?? __('Không xác định', 'acma-security-shield');
 
         $logs = get_option('wps_audit_logs', []);
         $new_log = [

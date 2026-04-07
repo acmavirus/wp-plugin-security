@@ -1,6 +1,7 @@
-# WP Plugin Security
+# Acma Security Shield
 
-Giải pháp bảo mật chuyên nghiệp cho WordPress, được phát triển theo tiêu chuẩn Clean Architecture.
+Advanced security solution for WordPress, developed with Clean Architecture.
+
 
 ## 🚀 Tính năng chính
 - Cấu trúc thư mục chuẩn PSR-4.

@@ -55,8 +55,8 @@ class SecurityController
 
         if ($this->security_service->get_setting('block_author_scan', true)) {
             if (!is_admin() && isset($_GET['author'])) {
-                $this->security_service->log_event('author_scan', __('Phát hiện hành vi quét tác giả', 'wp-plugin-security'));
-                wp_die(__('Quét tác giả đã bị vô hiệu hóa vì lý do bảo mật.', 'wp-plugin-security'), __('Lỗi bảo mật', 'wp-plugin-security'), ['response' => 403]);
+                $this->security_service->log_event('author_scan', __('Phát hiện hành vi quét tác giả', 'acma-security-shield'));
+                wp_die(__('Quét tác giả đã bị vô hiệu hóa vì lý do bảo mật.', 'acma-security-shield'), __('Lỗi bảo mật', 'acma-security-shield'), ['response' => 403]);
             }
         }
 
@@ -67,7 +67,7 @@ class SecurityController
                 }
 
                 if (!is_user_logged_in()) {
-                    return new \WP_Error('rest_forbidden', __('REST API chỉ dành cho người dùng đã đăng nhập.', 'wp-plugin-security'), ['status' => 401]);
+                    return new \WP_Error('rest_forbidden', __('REST API chỉ dành cho người dùng đã đăng nhập.', 'acma-security-shield'), ['status' => 401]);
                 }
 
                 return $result;
@@ -85,7 +85,7 @@ class SecurityController
 
         if ($this->security_service->get_setting('mask_login_errors', true)) {
             add_filter('login_errors', function () {
-                return __('Sai thông tin đăng nhập. Vui lòng thử lại.', 'wp-plugin-security');
+                return __('Sai thông tin đăng nhập. Vui lòng thử lại.', 'acma-security-shield');
             });
         }
 
@@ -106,29 +106,29 @@ class SecurityController
         }
 
         add_action('wp_login', function ($user_login, $user) {
-            $this->audit_service->log('login', sprintf(__('Người dùng %s đã đăng nhập', 'wp-plugin-security'), $user_login), $user->ID);
+            $this->audit_service->log('login', sprintf(__('Người dùng %s đã đăng nhập', 'acma-security-shield'), $user_login), $user->ID);
         }, 10, 2);
 
         add_action('wp_logout', function () {
             $user_id = get_current_user_id();
-            $this->audit_service->log('logout', __('Người dùng đã đăng xuất', 'wp-plugin-security'), $user_id);
+            $this->audit_service->log('logout', __('Người dùng đã đăng xuất', 'acma-security-shield'), $user_id);
         });
 
         add_action('switch_theme', function ($new_name) {
-            $this->audit_service->log('theme_change', sprintf(__('Đổi giao diện sang: %s', 'wp-plugin-security'), $new_name));
+            $this->audit_service->log('theme_change', sprintf(__('Đổi giao diện sang: %s', 'acma-security-shield'), $new_name));
         });
 
         add_action('activated_plugin', function ($plugin) {
-            $this->audit_service->log('plugin_activate', sprintf(__('Kích hoạt plugin: %s', 'wp-plugin-security'), $plugin));
+            $this->audit_service->log('plugin_activate', sprintf(__('Kích hoạt plugin: %s', 'acma-security-shield'), $plugin));
         });
 
         add_action('deactivated_plugin', function ($plugin) {
-            $this->audit_service->log('plugin_deactivate', sprintf(__('Hủy kích hoạt plugin: %s', 'wp-plugin-security'), $plugin));
+            $this->audit_service->log('plugin_deactivate', sprintf(__('Hủy kích hoạt plugin: %s', 'acma-security-shield'), $plugin));
         });
 
         add_action('save_post', function ($post_id, $post, $update) {
             if ($update) {
-                $this->audit_service->log('post_update', sprintf(__('Cập nhật bài viết: %s', 'wp-plugin-security'), get_the_title($post_id)));
+                $this->audit_service->log('post_update', sprintf(__('Cập nhật bài viết: %s', 'acma-security-shield'), get_the_title($post_id)));
             }
         }, 10, 3);
     }
@@ -194,7 +194,7 @@ class SecurityController
         }
 
         if (!$this->is_strong_password($password)) {
-            $errors->add('weak_password', '<strong>' . esc_html__('Lỗi:', 'wp-plugin-security') . '</strong> ' . esc_html__('Mật khẩu phải dài ít nhất 12 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt.', 'wp-plugin-security'));
+            $errors->add('weak_password', '<strong>' . esc_html__('Lỗi:', 'acma-security-shield') . '</strong> ' . esc_html__('Mật khẩu phải dài ít nhất 12 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt.', 'acma-security-shield'));
         }
     }
 
@@ -209,7 +209,7 @@ class SecurityController
         }
 
         if (!$this->is_strong_password($password)) {
-            $errors->add('weak_password', '<strong>' . esc_html__('Lỗi:', 'wp-plugin-security') . '</strong> ' . esc_html__('Mật khẩu phải dài ít nhất 12 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt.', 'wp-plugin-security'));
+            $errors->add('weak_password', '<strong>' . esc_html__('Lỗi:', 'acma-security-shield') . '</strong> ' . esc_html__('Mật khẩu phải dài ít nhất 12 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt.', 'acma-security-shield'));
         }
     }
 
@@ -220,29 +220,29 @@ class SecurityController
     {
         $user_ip = $_SERVER['REMOTE_ADDR'] ?? '';
         if ($this->security_service->is_ip_blocked($user_ip)) {
-            $this->security_service->log_event('ip_blocked', sprintf(__('IP %s cố gắng truy cập', 'wp-plugin-security'), $user_ip));
-            wp_die(__('Truy cập bị chặn bởi WP Plugin Security!', 'wp-plugin-security'), __('Truy cập bị từ chối', 'wp-plugin-security'), ['response' => 403]);
+            $this->security_service->log_event('ip_blocked', sprintf(__('IP %s cố gắng truy cập', 'acma-security-shield'), $user_ip));
+            wp_die(__('Truy cập bị chặn bởi WP Plugin Security!', 'acma-security-shield'), __('Truy cập bị từ chối', 'acma-security-shield'), ['response' => 403]);
         }
 
         if ($this->security_service->is_dangerous_request()) {
-            $this->security_service->log_event('dangerous_request', sprintf(__('Phát hiện request nguy hiểm từ IP %s', 'wp-plugin-security'), $user_ip));
-            wp_die(__('Phát hiện hành vi nguy hiểm!', 'wp-plugin-security'), __('Cảnh báo bảo mật', 'wp-plugin-security'), ['response' => 400]);
+            $this->security_service->log_event('dangerous_request', sprintf(__('Phát hiện request nguy hiểm từ IP %s', 'acma-security-shield'), $user_ip));
+            wp_die(__('Phát hiện hành vi nguy hiểm!', 'acma-security-shield'), __('Cảnh báo bảo mật', 'acma-security-shield'), ['response' => 400]);
         }
 
         if ($this->security_service->should_block_uploads_php_request()) {
-            $this->security_service->log_event('uploads_php_blocked', sprintf(__('Chặn request PHP trong uploads từ IP %s', 'wp-plugin-security'), $user_ip), $user_ip);
-            wp_die(__('Truy cập file PHP trong uploads đã bị chặn.', 'wp-plugin-security'), __('Cảnh báo bảo mật', 'wp-plugin-security'), ['response' => 403]);
+            $this->security_service->log_event('uploads_php_blocked', sprintf(__('Chặn request PHP trong uploads từ IP %s', 'acma-security-shield'), $user_ip), $user_ip);
+            wp_die(__('Truy cập file PHP trong uploads đã bị chặn.', 'acma-security-shield'), __('Cảnh báo bảo mật', 'acma-security-shield'), ['response' => 403]);
         }
 
         if ($this->security_service->is_geo_blocked($user_ip)) {
-            $country_code = $this->security_service->get_client_country_code() ?: __('không xác định', 'wp-plugin-security');
-            $this->security_service->log_event('geo_blocked', sprintf(__('Chặn truy cập từ quốc gia %1$s, IP %2$s', 'wp-plugin-security'), $country_code, $user_ip), $user_ip);
-            wp_die(__('Khu vực của bạn hiện không được phép truy cập.', 'wp-plugin-security'), __('Truy cập bị từ chối', 'wp-plugin-security'), ['response' => 403]);
+            $country_code = $this->security_service->get_client_country_code() ?: __('không xác định', 'acma-security-shield');
+            $this->security_service->log_event('geo_blocked', sprintf(__('Chặn truy cập từ quốc gia %1$s, IP %2$s', 'acma-security-shield'), $country_code, $user_ip), $user_ip);
+            wp_die(__('Khu vực của bạn hiện không được phép truy cập.', 'acma-security-shield'), __('Truy cập bị từ chối', 'acma-security-shield'), ['response' => 403]);
         }
 
         if ($this->security_service->is_rate_limited($user_ip, $_SERVER['REQUEST_URI'] ?? '', $_SERVER['REQUEST_METHOD'] ?? 'GET')) {
-            $this->security_service->log_event('rate_limited', sprintf(__('Rate limit kích hoạt cho IP %s', 'wp-plugin-security'), $user_ip), $user_ip);
-            wp_die(__('Bạn đang gửi quá nhiều yêu cầu trong thời gian ngắn. Vui lòng thử lại sau.', 'wp-plugin-security'), __('Tạm thời bị giới hạn', 'wp-plugin-security'), ['response' => 429]);
+            $this->security_service->log_event('rate_limited', sprintf(__('Rate limit kích hoạt cho IP %s', 'acma-security-shield'), $user_ip), $user_ip);
+            wp_die(__('Bạn đang gửi quá nhiều yêu cầu trong thời gian ngắn. Vui lòng thử lại sau.', 'acma-security-shield'), __('Tạm thời bị giới hạn', 'acma-security-shield'), ['response' => 429]);
         }
     }
 
@@ -275,7 +275,7 @@ class SecurityController
     {
         $ip = $_SERVER['REMOTE_ADDR'] ?? '';
         if (!$this->security_service->check_login_attempts($ip)) {
-            return new \WP_Error('locked_out', __('IP của bạn tạm thời bị khóa do thử sai quá nhiều lần.', 'wp-plugin-security'));
+            return new \WP_Error('locked_out', __('IP của bạn tạm thời bị khóa do thử sai quá nhiều lần.', 'acma-security-shield'));
         }
 
         return $user;
@@ -291,7 +291,7 @@ class SecurityController
         }
         ?>
         <p>
-            <label for="wps_2fa_code"><?php esc_html_e('Mã xác thực 2FA', 'wp-plugin-security'); ?><br>
+            <label for="wps_2fa_code"><?php esc_html_e('Mã xác thực 2FA', 'acma-security-shield'); ?><br>
                 <input type="text" name="wps_2fa_code" id="wps_2fa_code" class="input" value="" autocomplete="one-time-code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6">
             </label>
         </p>
@@ -313,13 +313,13 @@ class SecurityController
 
         $code = sanitize_text_field($_POST['wps_2fa_code'] ?? '');
         if ($code === '') {
-            return new \WP_Error('wps_2fa_required', __('Vui lòng nhập mã xác thực 2FA.', 'wp-plugin-security'));
+            return new \WP_Error('wps_2fa_required', __('Vui lòng nhập mã xác thực 2FA.', 'acma-security-shield'));
         }
 
         $secret = $this->security_service->get_two_factor_secret($user->ID);
         if ($secret === '' || !$this->security_service->verify_two_factor_code($secret, $code)) {
-            $this->security_service->log_event('two_factor_failed', sprintf(__('Sai mã 2FA của user %s', 'wp-plugin-security'), $user->user_login), $user->ID);
-            return new \WP_Error('wps_2fa_invalid', __('Mã xác thực 2FA không đúng.', 'wp-plugin-security'));
+            $this->security_service->log_event('two_factor_failed', sprintf(__('Sai mã 2FA của user %s', 'acma-security-shield'), $user->user_login), $user->ID);
+            return new \WP_Error('wps_2fa_invalid', __('Mã xác thực 2FA không đúng.', 'acma-security-shield'));
         }
 
         return $user;
@@ -345,7 +345,7 @@ class SecurityController
     {
         $page = sanitize_key($_GET['page'] ?? '');
 
-        if (is_admin() && $page === 'wp-plugin-security' && !current_user_can('manage_options') && !defined('DOING_AJAX')) {
+        if (is_admin() && $page === 'acma-security-shield' && !current_user_can('manage_options') && !defined('DOING_AJAX')) {
             wp_redirect(home_url());
             exit;
         }

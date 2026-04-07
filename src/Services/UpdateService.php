@@ -9,7 +9,7 @@ namespace Acma\WpSecurity\Services;
 class UpdateService
 {
     private $username = 'acmavirus';
-    private $repository = 'wp-plugin-security';
+    private $repository = 'acma-security-shield';
     private $plugin_file;
     private $github_response;
 
@@ -90,7 +90,7 @@ class UpdateService
 
         if (version_compare($current_version, $remote->version, '<')) {
             $obj = new \stdClass();
-            $obj->slug = 'wp-plugin-security';
+            $obj->slug = 'acma-security-shield';
             $obj->plugin = $plugin_file;
             $obj->new_version = $remote->version;
             $obj->url = $remote->url;
@@ -111,7 +111,7 @@ class UpdateService
         if (isset($hook_extra['plugin']) && $hook_extra['plugin'] === plugin_basename($this->plugin_file)) {
             $source_files = array_diff(scandir($source), array('..', '.'));
 
-            // Nếu trong thư mục giải nén chỉ có 1 thư mục mẹ duy nhất (ví dụ: wp-plugin-security-1.0.8)
+            // Nếu trong thư mục giải nén chỉ có 1 thư mục mẹ duy nhất (ví dụ: acma-security-shield-1.0.8)
             // thì chúng ta cần "đi sâu" vào thư mục đó để lấy source
             if (count($source_files) === 1 && is_dir($source . '/' . current($source_files))) {
                 $source = $source . '/' . current($source_files) . '/';

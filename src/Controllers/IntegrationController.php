@@ -107,7 +107,7 @@ class IntegrationController
 
         $position = (string) $this->get_setting('notification_bar_position', 'top');
         $link = esc_url($this->get_setting('notification_bar_link', ''));
-        $button = (string) $this->get_setting('notification_bar_button', __('Xem thêm', 'wp-plugin-security'));
+        $button = (string) $this->get_setting('notification_bar_button', __('Xem thêm', 'acma-security-shield'));
 
         $style = 'position:sticky;top:0;z-index:9999;background:linear-gradient(135deg,#1167ad,#003b6b);color:#fff;padding:12px 16px;text-align:center;font-size:14px;';
         if ($position === 'bottom') {
@@ -129,8 +129,8 @@ class IntegrationController
         }
 
         $channels = [
-            'chat_phone' => ['label' => __('Điện thoại', 'wp-plugin-security'), 'icon' => 'tel:+'],
-            'chat_sms' => ['label' => __('Tin nhắn', 'wp-plugin-security'), 'icon' => 'sms:'],
+            'chat_phone' => ['label' => __('Điện thoại', 'acma-security-shield'), 'icon' => 'tel:+'],
+            'chat_sms' => ['label' => __('Tin nhắn', 'acma-security-shield'), 'icon' => 'sms:'],
             'chat_zalo' => ['label' => 'Zalo', 'icon' => 'https://zalo.me/'],
             'chat_messenger' => ['label' => 'Messenger', 'icon' => 'https://m.me/'],
             'chat_telegram' => ['label' => 'Telegram', 'icon' => 'https://t.me/'],
@@ -206,7 +206,7 @@ class IntegrationController
 
         $token = sanitize_text_field($_POST['wps_recaptcha_response'] ?? '');
         if ($token === '' || !$this->verify_recaptcha($token)) {
-            return new \WP_Error('wps_recaptcha_failed', __('Xác thực reCAPTCHA thất bại.', 'wp-plugin-security'));
+            return new \WP_Error('wps_recaptcha_failed', __('Xác thực reCAPTCHA thất bại.', 'acma-security-shield'));
         }
 
         return $user;
@@ -232,7 +232,7 @@ class IntegrationController
         if ($this->get_setting('google_login_enabled', false)) {
             $url = $this->get_google_login_url();
             if ($url) {
-                echo '<p style="margin:16px 0;"><a class="button button-primary" href="' . esc_url($url) . '" style="width:100%;text-align:center;">' . esc_html__('Đăng nhập bằng Google', 'wp-plugin-security') . '</a></p>';
+                echo '<p style="margin:16px 0;"><a class="button button-primary" href="' . esc_url($url) . '" style="width:100%;text-align:center;">' . esc_html__('Đăng nhập bằng Google', 'acma-security-shield') . '</a></p>';
             }
         }
 
@@ -253,12 +253,12 @@ class IntegrationController
         }
 
         if (!$this->get_setting('google_login_enabled', false)) {
-            wp_die(__('Đăng nhập bằng Google đã bị tắt.', 'wp-plugin-security'));
+            wp_die(__('Đăng nhập bằng Google đã bị tắt.', 'acma-security-shield'));
         }
 
         $auth_url = $this->build_google_auth_url();
         if (!$auth_url) {
-            wp_die(__('Chưa cấu hình đăng nhập bằng Google.', 'wp-plugin-security'));
+            wp_die(__('Chưa cấu hình đăng nhập bằng Google.', 'acma-security-shield'));
         }
 
         wp_safe_redirect($auth_url);
@@ -268,13 +268,13 @@ class IntegrationController
     public function handle_google_callback()
     {
         if (!$this->get_setting('google_login_enabled', false)) {
-            wp_die(__('Đăng nhập bằng Google đã bị tắt.', 'wp-plugin-security'));
+            wp_die(__('Đăng nhập bằng Google đã bị tắt.', 'acma-security-shield'));
         }
 
         $code = sanitize_text_field($_GET['code'] ?? '');
         $state = sanitize_text_field($_GET['state'] ?? '');
         if ($state === '' || !wp_verify_nonce($state, 'wps_google_login_state')) {
-            wp_die(__('Trạng thái đăng nhập Google không hợp lệ.', 'wp-plugin-security'));
+            wp_die(__('Trạng thái đăng nhập Google không hợp lệ.', 'acma-security-shield'));
         }
 
         if ($code === '') {
@@ -353,7 +353,7 @@ class IntegrationController
 
         $numeric = (float) $product->get_price();
         if ($numeric <= 0) {
-            return esc_html((string) $this->get_setting('woo_price_zero_text', __('Liên hệ', 'wp-plugin-security')));
+            return esc_html((string) $this->get_setting('woo_price_zero_text', __('Liên hệ', 'acma-security-shield')));
         }
 
         return $price;
@@ -361,7 +361,7 @@ class IntegrationController
 
     public function filter_empty_price_html($price, $product)
     {
-            return esc_html((string) $this->get_setting('woo_price_zero_text', __('Liên hệ', 'wp-plugin-security')));
+            return esc_html((string) $this->get_setting('woo_price_zero_text', __('Liên hệ', 'acma-security-shield')));
     }
 
     public function register_woocommerce_hooks()
@@ -395,7 +395,7 @@ class IntegrationController
         }
 
         $message = sprintf(
-            __("Đơn hàng mới #%s\nKhách hàng: %s\nTổng tiền: %s\nTrạng thái: %s", 'wp-plugin-security'),
+            __("Đơn hàng mới #%s\nKhách hàng: %s\nTổng tiền: %s\nTrạng thái: %s", 'acma-security-shield'),
             $order->get_order_number(),
             $order->get_formatted_billing_full_name(),
             html_entity_decode(wp_strip_all_tags($order->get_formatted_order_total())),

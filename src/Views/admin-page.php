@@ -1,35 +1,35 @@
 <?php
         $current_tab = sanitize_key($_GET['tab'] ?? 'general');
         $notices = [];        $tab_meta = [
-            'general' => ['label' => __('Hệ thống & WAF', 'wp-plugin-security'), 'icon' => 'dashicons-admin-generic', 'group' => 'security'],
-            'login' => ['label' => __('Đăng nhập', 'wp-plugin-security'), 'icon' => 'dashicons-lock', 'group' => 'security'],
-            'blacklist' => ['label' => __('Danh sách chặn IP', 'wp-plugin-security'), 'icon' => 'dashicons-no-alt', 'group' => 'security'],
-            'audit' => ['label' => __('Nhật ký kiểm tra', 'wp-plugin-security'), 'icon' => 'dashicons-list-view', 'group' => 'security'],
-            'monitoring' => ['label' => __('Giám sát', 'wp-plugin-security'), 'icon' => 'dashicons-visibility', 'group' => 'security'],
-            'speed' => ['label' => __('Tốc độ', 'wp-plugin-security'), 'icon' => 'dashicons-performance', 'group' => 'performance'],
-            'updates' => ['label' => __('Cập nhật', 'wp-plugin-security'), 'icon' => 'dashicons-update', 'group' => 'editor_updates'],
-            'seo' => ['label' => __('SEO & Mục lục', 'wp-plugin-security'), 'icon' => 'dashicons-search', 'group' => 'seo_content'],
-            'seo_ai' => ['label' => __('SEO AI', 'wp-plugin-security'), 'icon' => 'dashicons-lightbulb', 'group' => 'seo_content'],
-            'seo_content_ai' => ['label' => __('SEO Content', 'wp-plugin-security'), 'icon' => 'dashicons-edit-large', 'group' => 'seo_content'],
-            'editor' => ['label' => __('Trình soạn thảo', 'wp-plugin-security'), 'icon' => 'dashicons-edit-page', 'group' => 'editor_updates'],
-            'google' => ['label' => __('Google', 'wp-plugin-security'), 'icon' => 'dashicons-google', 'group' => 'google'],
-            'email' => ['label' => __('Email', 'wp-plugin-security'), 'icon' => 'dashicons-email-alt', 'group' => 'email_notifications'],
-            'users' => ['label' => __('Người dùng', 'wp-plugin-security'), 'icon' => 'dashicons-admin-users', 'group' => 'users'],
-            'woocommerce' => ['label' => __('WooCommerce', 'wp-plugin-security'), 'icon' => 'dashicons-cart', 'group' => 'woocommerce'],
-            'marketing' => ['label' => __('Marketing', 'wp-plugin-security'), 'icon' => 'dashicons-megaphone', 'group' => 'marketing_helpers'],
-            'tools' => ['label' => __('Công cụ', 'wp-plugin-security'), 'icon' => 'dashicons-hammer', 'group' => 'marketing_helpers'],
-            'changelog' => ['label' => __('Nhật ký thay đổi', 'wp-plugin-security'), 'icon' => 'dashicons-media-document', 'group' => 'marketing_helpers'],
+            'general' => ['label' => __('Hệ thống & WAF', 'acma-security-shield'), 'icon' => 'dashicons-admin-generic', 'group' => 'security'],
+            'login' => ['label' => __('Đăng nhập', 'acma-security-shield'), 'icon' => 'dashicons-lock', 'group' => 'security'],
+            'blacklist' => ['label' => __('Danh sách chặn IP', 'acma-security-shield'), 'icon' => 'dashicons-no-alt', 'group' => 'security'],
+            'audit' => ['label' => __('Nhật ký kiểm tra', 'acma-security-shield'), 'icon' => 'dashicons-list-view', 'group' => 'security'],
+            'monitoring' => ['label' => __('Giám sát', 'acma-security-shield'), 'icon' => 'dashicons-visibility', 'group' => 'security'],
+            'speed' => ['label' => __('Tốc độ', 'acma-security-shield'), 'icon' => 'dashicons-performance', 'group' => 'performance'],
+            'updates' => ['label' => __('Cập nhật', 'acma-security-shield'), 'icon' => 'dashicons-update', 'group' => 'editor_updates'],
+            'seo' => ['label' => __('SEO & Mục lục', 'acma-security-shield'), 'icon' => 'dashicons-search', 'group' => 'seo_content'],
+            'seo_ai' => ['label' => __('SEO AI', 'acma-security-shield'), 'icon' => 'dashicons-lightbulb', 'group' => 'seo_content'],
+            'seo_content_ai' => ['label' => __('SEO Content', 'acma-security-shield'), 'icon' => 'dashicons-edit-large', 'group' => 'seo_content'],
+            'editor' => ['label' => __('Trình soạn thảo', 'acma-security-shield'), 'icon' => 'dashicons-edit-page', 'group' => 'editor_updates'],
+            'google' => ['label' => __('Google', 'acma-security-shield'), 'icon' => 'dashicons-google', 'group' => 'google'],
+            'email' => ['label' => __('Email', 'acma-security-shield'), 'icon' => 'dashicons-email-alt', 'group' => 'email_notifications'],
+            'users' => ['label' => __('Người dùng', 'acma-security-shield'), 'icon' => 'dashicons-admin-users', 'group' => 'users'],
+            'woocommerce' => ['label' => __('WooCommerce', 'acma-security-shield'), 'icon' => 'dashicons-cart', 'group' => 'woocommerce'],
+            'marketing' => ['label' => __('Marketing', 'acma-security-shield'), 'icon' => 'dashicons-megaphone', 'group' => 'marketing_helpers'],
+            'tools' => ['label' => __('Công cụ', 'acma-security-shield'), 'icon' => 'dashicons-hammer', 'group' => 'marketing_helpers'],
+            'changelog' => ['label' => __('Nhật ký thay đổi', 'acma-security-shield'), 'icon' => 'dashicons-media-document', 'group' => 'marketing_helpers'],
         ];
         $group_meta = [
-            'security' => ['label' => __('Bảo mật', 'wp-plugin-security'), 'icon' => 'dashicons-shield-alt'],
-            'performance' => ['label' => __('Hiệu năng', 'wp-plugin-security'), 'icon' => 'dashicons-performance'],
-            'seo_content' => ['label' => __('SEO & Nội dung', 'wp-plugin-security'), 'icon' => 'dashicons-media-document'],
-            'editor_updates' => ['label' => __('Trình soạn thảo & Cập nhật', 'wp-plugin-security'), 'icon' => 'dashicons-edit-page'],
-            'google' => ['label' => __('Google', 'wp-plugin-security'), 'icon' => 'dashicons-google'],
-            'email_notifications' => ['label' => __('Email & Thông báo', 'wp-plugin-security'), 'icon' => 'dashicons-email-alt'],
-            'users' => ['label' => __('Người dùng', 'wp-plugin-security'), 'icon' => 'dashicons-admin-users'],
-            'woocommerce' => ['label' => __('WooCommerce', 'wp-plugin-security'), 'icon' => 'dashicons-cart'],
-            'marketing_helpers' => ['label' => __('Marketing & Trợ giúp', 'wp-plugin-security'), 'icon' => 'dashicons-megaphone'],
+            'security' => ['label' => __('Bảo mật', 'acma-security-shield'), 'icon' => 'dashicons-shield-alt'],
+            'performance' => ['label' => __('Hiệu năng', 'acma-security-shield'), 'icon' => 'dashicons-performance'],
+            'seo_content' => ['label' => __('SEO & Nội dung', 'acma-security-shield'), 'icon' => 'dashicons-media-document'],
+            'editor_updates' => ['label' => __('Trình soạn thảo & Cập nhật', 'acma-security-shield'), 'icon' => 'dashicons-edit-page'],
+            'google' => ['label' => __('Google', 'acma-security-shield'), 'icon' => 'dashicons-google'],
+            'email_notifications' => ['label' => __('Email & Thông báo', 'acma-security-shield'), 'icon' => 'dashicons-email-alt'],
+            'users' => ['label' => __('Người dùng', 'acma-security-shield'), 'icon' => 'dashicons-admin-users'],
+            'woocommerce' => ['label' => __('WooCommerce', 'acma-security-shield'), 'icon' => 'dashicons-cart'],
+            'marketing_helpers' => ['label' => __('Marketing & Trợ giúp', 'acma-security-shield'), 'icon' => 'dashicons-megaphone'],
         ];
         $current_group = $tab_meta[$current_tab]['group'] ?? 'security';
         $group_tabs = [];
@@ -39,62 +39,62 @@
 
         $hero_meta_map = [
             'security' => [
-                'eyebrow' => __('Nhóm bảo mật', 'wp-plugin-security'),
-                'title' => __('Bảo mật, xác thực và tường lửa', 'wp-plugin-security'),
-                'description' => __('Gia cố login, 2FA, WAF, geoblocking, chặn brute force và giám sát 404 từ một điềm điều khiển.', 'wp-plugin-security'),
-                'pills' => [__('2FA', 'wp-plugin-security'), __('WAF', 'wp-plugin-security'), __('404 monitor', 'wp-plugin-security')],
+                'eyebrow' => __('Nhóm bảo mật', 'acma-security-shield'),
+                'title' => __('Bảo mật, xác thực và tường lửa', 'acma-security-shield'),
+                'description' => __('Gia cố login, 2FA, WAF, geoblocking, chặn brute force và giám sát 404 từ một điềm điều khiển.', 'acma-security-shield'),
+                'pills' => [__('2FA', 'acma-security-shield'), __('WAF', 'acma-security-shield'), __('404 monitor', 'acma-security-shield')],
             ],
             'performance' => [
-                'eyebrow' => __('Nhóm hiệu năng', 'wp-plugin-security'),
-                'title' => __('Tối ưu tốc độ và cập nhật', 'wp-plugin-security'),
-                'description' => __('Dọn rác hệ thống, rút gọn HTML, tắt tài nguyên thừa và kiểm soát vòng đời cập nhật.', 'wp-plugin-security'),
-                'pills' => [__('Speed', 'wp-plugin-security'), __('Cleanup', 'wp-plugin-security'), __('Updates', 'wp-plugin-security')],
+                'eyebrow' => __('Nhóm hiệu năng', 'acma-security-shield'),
+                'title' => __('Tối ưu tốc độ và cập nhật', 'acma-security-shield'),
+                'description' => __('Dọn rác hệ thống, rút gọn HTML, tắt tài nguyên thừa và kiểm soát vòng đời cập nhật.', 'acma-security-shield'),
+                'pills' => [__('Speed', 'acma-security-shield'), __('Cleanup', 'acma-security-shield'), __('Updates', 'acma-security-shield')],
             ],
             'seo_content' => [
-                'eyebrow' => __('Nhóm SEO & nội dung', 'wp-plugin-security'),
-                'title' => __('SEO, mục lục và AI nội dung', 'wp-plugin-security'),
-                'description' => __('Tự chèn mục lục, tối ưu Rank Math, sinh meta bằng Gemini và quét/rewrite nội dung.', 'wp-plugin-security'),
-                'pills' => [__('SEO AI', 'wp-plugin-security'), __('TOC', 'wp-plugin-security'), __('Content AI', 'wp-plugin-security')],
+                'eyebrow' => __('Nhóm SEO & nội dung', 'acma-security-shield'),
+                'title' => __('SEO, mục lục và AI nội dung', 'acma-security-shield'),
+                'description' => __('Tự chèn mục lục, tối ưu Rank Math, sinh meta bằng Gemini và quét/rewrite nội dung.', 'acma-security-shield'),
+                'pills' => [__('SEO AI', 'acma-security-shield'), __('TOC', 'acma-security-shield'), __('Content AI', 'acma-security-shield')],
             ],
             'editor_updates' => [
-                'eyebrow' => __('Nhóm soạn thảo & cập nhật', 'wp-plugin-security'),
-                'title' => __('Soạn thảo cổ điển và khóa cập nhật', 'wp-plugin-security'),
-                'description' => __('Giữ classic editor, mở rộng TinyMCE, đồng thời chặn update core/plugin/theme khi cần.', 'wp-plugin-security'),
-                'pills' => [__('Editor', 'wp-plugin-security'), __('Updates', 'wp-plugin-security'), __('Classic', 'wp-plugin-security')],
+                'eyebrow' => __('Nhóm soạn thảo & cập nhật', 'acma-security-shield'),
+                'title' => __('Soạn thảo cổ điển và khóa cập nhật', 'acma-security-shield'),
+                'description' => __('Giữ classic editor, mở rộng TinyMCE, đồng thời chặn update core/plugin/theme khi cần.', 'acma-security-shield'),
+                'pills' => [__('Editor', 'acma-security-shield'), __('Updates', 'acma-security-shield'), __('Classic', 'acma-security-shield')],
             ],
             'google' => [
-                'eyebrow' => __('Nhóm Google', 'wp-plugin-security'),
-                'title' => __('Indexing, login và captcha', 'wp-plugin-security'),
-                'description' => __('Kết nối Google Indexing API, đăng nhập Google và reCAPTCHA ngay trong một luòng cấu hình.', 'wp-plugin-security'),
-                'pills' => [__('Indexing API', 'wp-plugin-security'), __('Google Login', 'wp-plugin-security'), __('reCAPTCHA', 'wp-plugin-security')],
+                'eyebrow' => __('Nhóm Google', 'acma-security-shield'),
+                'title' => __('Indexing, login và captcha', 'acma-security-shield'),
+                'description' => __('Kết nối Google Indexing API, đăng nhập Google và reCAPTCHA ngay trong một luòng cấu hình.', 'acma-security-shield'),
+                'pills' => [__('Indexing API', 'acma-security-shield'), __('Google Login', 'acma-security-shield'), __('reCAPTCHA', 'acma-security-shield')],
             ],
             'email_notifications' => [
-                'eyebrow' => __('Nhóm email & thông báo', 'wp-plugin-security'),
-                'title' => __('SMTP, cảnh báo và thanh thông báo', 'wp-plugin-security'),
-                'description' => __('Cấu hình SMTP, email tự động, notification bar và luòng thông báo vận hành.', 'wp-plugin-security'),
-                'pills' => [__('SMTP', 'wp-plugin-security'), __('Mail', 'wp-plugin-security'), __('Banner', 'wp-plugin-security')],
+                'eyebrow' => __('Nhóm email & thông báo', 'acma-security-shield'),
+                'title' => __('SMTP, cảnh báo và thanh thông báo', 'acma-security-shield'),
+                'description' => __('Cấu hình SMTP, email tự động, notification bar và luòng thông báo vận hành.', 'acma-security-shield'),
+                'pills' => [__('SMTP', 'acma-security-shield'), __('Mail', 'acma-security-shield'), __('Banner', 'acma-security-shield')],
             ],
             'users' => [
-                'eyebrow' => __('Nhóm người dùng', 'wp-plugin-security'),
-                'title' => __('Cô lập dữ liệu và avatar nội bộ', 'wp-plugin-security'),
-                'description' => __('Giới hạn dữ liệu user thường, avatar cục bộ và các cột quản trị hỗ trợ vận hành.', 'wp-plugin-security'),
-                'pills' => [__('Isolation', 'wp-plugin-security'), __('Avatar', 'wp-plugin-security'), __('User ID', 'wp-plugin-security')],
+                'eyebrow' => __('Nhóm người dùng', 'acma-security-shield'),
+                'title' => __('Cô lập dữ liệu và avatar nội bộ', 'acma-security-shield'),
+                'description' => __('Giới hạn dữ liệu user thường, avatar cục bộ và các cột quản trị hỗ trợ vận hành.', 'acma-security-shield'),
+                'pills' => [__('Isolation', 'acma-security-shield'), __('Avatar', 'acma-security-shield'), __('User ID', 'acma-security-shield')],
             ],
             'woocommerce' => [
-                'eyebrow' => __('Nhóm WooCommerce', 'wp-plugin-security'),
-                'title' => __('Tùy biến bán hàng và cảnh báo đơn', 'wp-plugin-security'),
-                'description' => __('Đổi text, hiển thị liên hệ khi giá 0 và đẩy cảnh báo đơn qua Telegram.', 'wp-plugin-security'),
-                'pills' => [__('Store', 'wp-plugin-security'), __('Telegram', 'wp-plugin-security'), __('Checkout', 'wp-plugin-security')],
+                'eyebrow' => __('Nhóm WooCommerce', 'acma-security-shield'),
+                'title' => __('Tùy biến bán hàng và cảnh báo đơn', 'acma-security-shield'),
+                'description' => __('Đổi text, hiển thị liên hệ khi giá 0 và đẩy cảnh báo đơn qua Telegram.', 'acma-security-shield'),
+                'pills' => [__('Store', 'acma-security-shield'), __('Telegram', 'acma-security-shield'), __('Checkout', 'acma-security-shield')],
             ],
             'marketing_helpers' => [
-                'eyebrow' => __('Nhóm marketing & trợ giúp', 'wp-plugin-security'),
-                'title' => __('Chat, redirect, injector và công cụ khẩn cấp', 'wp-plugin-security'),
-                'description' => __('Dùng chat bubble, code injector, search/replace, redirects và công cụ cứu hộ tại một nơi.', 'wp-plugin-security'),
-                'pills' => [__('Chat', 'wp-plugin-security'), __('Redirect', 'wp-plugin-security'), __('Tools', 'wp-plugin-security')],
+                'eyebrow' => __('Nhóm marketing & trợ giúp', 'acma-security-shield'),
+                'title' => __('Chat, redirect, injector và công cụ khẩn cấp', 'acma-security-shield'),
+                'description' => __('Dùng chat bubble, code injector, search/replace, redirects và công cụ cứu hộ tại một nơi.', 'acma-security-shield'),
+                'pills' => [__('Chat', 'acma-security-shield'), __('Redirect', 'acma-security-shield'), __('Tools', 'acma-security-shield')],
             ],
         ];
         $hero_meta = $hero_meta_map[$current_group] ?? $hero_meta_map['security'];
-        $current_tab_label = $tab_meta[$current_tab]['label'] ?? __('Tổng quan', 'wp-plugin-security');
+        $current_tab_label = $tab_meta[$current_tab]['label'] ?? __('Tổng quan', 'acma-security-shield');
         if (isset($_POST['wps_tool_action']) && current_user_can('manage_options')) {
             check_admin_referer('wps_tool_nonce_action', 'wps_tool_nonce');
             $action = sanitize_key($_POST['wps_tool_action']);
@@ -102,13 +102,13 @@
             if ($action === 'kill_sessions') {
                 $destroyed_sessions = $this->destroy_all_sessions();
                 $notices[] = sprintf(
-                    __('Đã đăng xuất %d phiên đăng nhập trên toàn website.', 'wp-plugin-security'),
+                    __('Đã đăng xuất %d phiên đăng nhập trên toàn website.', 'acma-security-shield'),
                     $destroyed_sessions
                 );
             } elseif ($action === 'force_pw_reset') {
                 $reset_users = $this->force_password_reset_for_all_users();
                 $notices[] = sprintf(
-                    __('Đã vô hiệu hóa mật khẩu và session hiện tại của %d tài khoản.', 'wp-plugin-security'),
+                    __('Đã vô hiệu hóa mật khẩu và session hiện tại của %d tài khoản.', 'acma-security-shield'),
                     $reset_users
                 );
             }
@@ -121,19 +121,19 @@
             if ($current_tab === 'speed') {
                 if ($maintenance_action === 'cleanup_revisions') {
                     $removed = $this->cleanup_revisions();
-                    $notices[] = sprintf(__('Đã xóa %d revision.', 'wp-plugin-security'), $removed);
+                    $notices[] = sprintf(__('Đã xóa %d revision.', 'acma-security-shield'), $removed);
                 } elseif ($maintenance_action === 'cleanup_transients') {
                     $removed = $this->cleanup_expired_transients();
                     $notices[] = sprintf('Đã dọn %d transient hết hạn.', $removed);
                 } elseif ($maintenance_action === 'cleanup_autodrafts') {
                     $removed = $this->cleanup_auto_drafts();
-                    $notices[] = sprintf(__('Đã xóa %d auto-draft.', 'wp-plugin-security'), $removed);
+                    $notices[] = sprintf(__('Đã xóa %d auto-draft.', 'acma-security-shield'), $removed);
                 } elseif ($maintenance_action === 'cleanup_spam_comments') {
                     $removed = $this->cleanup_spam_comments();
                     $notices[] = sprintf('Đã xóa %d spam comment.', $removed);
                 } elseif ($maintenance_action === 'optimize_database_tables') {
                     $optimized = $this->optimize_database_tables();
-                    $notices[] = sprintf(__('Đã tối ưu %d bảng cơ sở dữ liệu.', 'wp-plugin-security'), $optimized);
+                    $notices[] = sprintf(__('Đã tối ưu %d bảng cơ sở dữ liệu.', 'acma-security-shield'), $optimized);
                 }
             }
         }
@@ -146,7 +146,7 @@
                 if ($search !== '') {
                     $result = $this->run_search_replace($search, $replace);
                     $notices[] = sprintf(
-                        __('Đã cập nhật %d nội dung và %d tùy chọn.', 'wp-plugin-security'),
+                        __('Đã cập nhật %d nội dung và %d tùy chọn.', 'acma-security-shield'),
                         (int) ($result['content'] ?? 0),
                         (int) ($result['options'] ?? 0)
                     );
@@ -200,7 +200,7 @@
                 $selected_types = array_values(array_intersect($selected_types, $allowed_post_types));
                 $main_settings = array_merge($main_settings, [
                     'enable_toc' => isset($_POST['enable_toc']),
-                    'toc_title' => sanitize_text_field($_POST['toc_title'] ?? __('Mục lục', 'wp-plugin-security')),
+                    'toc_title' => sanitize_text_field($_POST['toc_title'] ?? __('Mục lục', 'acma-security-shield')),
                     'toc_post_types' => !empty($selected_types) ? $selected_types : ['post', 'page'],
                     'auto_featured_image' => isset($_POST['auto_featured_image']),
                 ]);
@@ -335,7 +335,7 @@
                 update_option('wps_blocked_ips', $clean_ips);
             }
 
-            $notices[] = __('Lưu thiết lập thành công.', 'wp-plugin-security');
+            $notices[] = __('Lưu thiết lập thành công.', 'acma-security-shield');
         }
 
         $main_settings = get_option('wps_main_settings', [
@@ -363,7 +363,7 @@
             'cdn_url' => '',
             'preload_assets' => '',
                 'enable_toc' => true,
-                'toc_title' => __('Mục lục', 'wp-plugin-security'),
+                'toc_title' => __('Mục lục', 'acma-security-shield'),
                 'toc_post_types' => $this->get_toc_post_types(),
                 'auto_featured_image' => false,
                 'seo_ai_enabled' => false,
@@ -436,7 +436,7 @@
             'code_inject_footer' => '',
             'redirect_rules' => '',
             'woo_add_to_cart_text' => '',
-            'woo_price_zero_text' => __('Liên hệ', 'wp-plugin-security'),
+            'woo_price_zero_text' => __('Liên hệ', 'acma-security-shield'),
             'woo_telegram_enabled' => false,
             'woo_telegram_bot_token' => '',
             'woo_telegram_chat_id' => '',
@@ -698,28 +698,28 @@
             <div class="wps-admin-shell">
                 <aside class="wps-sidebar">
                     <div class="wps-brand">
-                        <h1><?php _e('WP Security', 'wp-plugin-security'); ?></h1>
-                        <p><?php _e('Tabbed control center for hardening, login, audit, and emergency tools.', 'wp-plugin-security'); ?></p>
+                        <h1><?php _e('WP Security', 'acma-security-shield'); ?></h1>
+                        <p><?php _e('Tabbed control center for hardening, login, audit, and emergency tools.', 'acma-security-shield'); ?></p>
                         <div class="wps-version-chip"><span class="dashicons dashicons-shield"></span><span>v<?php echo esc_html($this->get_plugin_version()); ?></span></div>
                     </div>
-                    <nav class="wps-nav" aria-label="<?php esc_attr_e('Security sections', 'wp-plugin-security'); ?>">
+                    <nav class="wps-nav" aria-label="<?php esc_attr_e('Security sections', 'acma-security-shield'); ?>">
                         <?php foreach ($group_meta as $group_key => $group_data) : ?>
                             <?php $first_tab = array_key_first($group_tabs[$group_key] ?? []); ?>
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=wp-plugin-security&tab=' . $first_tab)); ?>" class="wps-nav-item <?php echo $current_group === $group_key ? 'is-active' : ''; ?>">
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=acma-security-shield&tab=' . $first_tab)); ?>" class="wps-nav-item <?php echo $current_group === $group_key ? 'is-active' : ''; ?>">
                                 <span class="dashicons <?php echo esc_attr($group_data['icon']); ?>"></span>
                                 <span><?php echo esc_html($group_data['label']); ?></span>
                             </a>
                         <?php endforeach; ?>
                     </nav>
-        <div class="wps-sidebar-foot"><?php _e('Giao diện ưu tiên bảo mật. Chỉ dùng thiết lập cục bộ. Không có theo dõi ẩn.', 'wp-plugin-security'); ?></div>
+        <div class="wps-sidebar-foot"><?php _e('Giao diện ưu tiên bảo mật. Chỉ dùng thiết lập cục bộ. Không có theo dõi ẩn.', 'acma-security-shield'); ?></div>
                 </aside>
                 <main class="wps-main">
                     <section class="wps-hero">
                         <div class="wps-hero-shell">
                             <div class="wps-hero-copy">
                                 <span class="wps-hero-eyebrow"><?php echo esc_html($hero_meta['eyebrow'] ?? $current_tab_label); ?></span>
-                                <h2><?php echo esc_html($hero_meta['title'] ?? __('Thiết lập WP Security', 'wp-plugin-security')); ?></h2>
-                                <p><?php echo esc_html($hero_meta['description'] ?? __('Giao diện quản trị đồng bộ theo phong cách AI/Agent.', 'wp-plugin-security')); ?></p>
+                                <h2><?php echo esc_html($hero_meta['title'] ?? __('Thiết lập WP Security', 'acma-security-shield')); ?></h2>
+                                <p><?php echo esc_html($hero_meta['description'] ?? __('Giao diện quản trị đồng bộ theo phong cách AI/Agent.', 'acma-security-shield')); ?></p>
                                 <div class="wps-pill-row">
                                     <?php foreach ((array) ($hero_meta['pills'] ?? []) as $pill) : ?>
                                         <span class="wps-pill"><?php echo esc_html($pill); ?></span>
@@ -733,9 +733,9 @@
                         </div>
                     </section>
 
-                    <nav class="wps-top-tabs" aria-label="<?php esc_attr_e('Feature tabs', 'wp-plugin-security'); ?>">
+                    <nav class="wps-top-tabs" aria-label="<?php esc_attr_e('Feature tabs', 'acma-security-shield'); ?>">
                         <?php foreach (($group_tabs[$current_group] ?? []) as $tab_key => $tab_data) : ?>
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=wp-plugin-security&tab=' . $tab_key)); ?>" class="wps-top-tab <?php echo $current_tab === $tab_key ? 'is-active' : ''; ?>">
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=acma-security-shield&tab=' . $tab_key)); ?>" class="wps-top-tab <?php echo $current_tab === $tab_key ? 'is-active' : ''; ?>">
                                 <span class="dashicons <?php echo esc_attr($tab_data['icon']); ?>"></span>
                                 <span><?php echo esc_html($tab_data['label']); ?></span>
                             </a>

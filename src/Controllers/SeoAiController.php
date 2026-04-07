@@ -36,7 +36,7 @@ class SeoAiController
         foreach ($post_types as $post_type) {
             add_meta_box(
                 'wps-seo-ai',
-                __('SEO AI Rank Math', 'wp-plugin-security'),
+                __('SEO AI Rank Math', 'acma-security-shield'),
                 [$this, 'render_metabox'],
                 $post_type,
                 'side',
@@ -192,10 +192,10 @@ JS;
         $score = (int) get_post_meta($post->ID, '_wps_seo_ai_score', true);
         $nonce = wp_create_nonce('wps_seo_ai_optimize_' . $post->ID);
         ?>
-        <p><strong><?php esc_html_e('Điểm SEO AI ước tính', 'wp-plugin-security'); ?>:</strong> <span id="wps-seo-ai-score"><?php echo esc_html($score); ?>/100</span></p>
-        <p id="wps-seo-ai-status" class="description"><?php esc_html_e('Khi lưu bài, plugin sẽ tự tối ưu và cập nhật Rank Math meta. Nút Optimize Now là thao tác thủ công dự phòng.', 'wp-plugin-security'); ?></p>
+        <p><strong><?php esc_html_e('Điểm SEO AI ước tính', 'acma-security-shield'); ?>:</strong> <span id="wps-seo-ai-score"><?php echo esc_html($score); ?>/100</span></p>
+        <p id="wps-seo-ai-status" class="description"><?php esc_html_e('Khi lưu bài, plugin sẽ tự tối ưu và cập nhật Rank Math meta. Nút Optimize Now là thao tác thủ công dự phòng.', 'acma-security-shield'); ?></p>
         <p>
-            <button type="button" class="button button-primary" id="wps-seo-ai-optimize" data-post-id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr($nonce); ?>"><?php esc_html_e('Optimize Now', 'wp-plugin-security'); ?></button>
+            <button type="button" class="button button-primary" id="wps-seo-ai-optimize" data-post-id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr($nonce); ?>"><?php esc_html_e('Optimize Now', 'acma-security-shield'); ?></button>
         </p>
         <?php
     }
@@ -207,23 +207,23 @@ JS;
     {
         $post_id = absint($_POST['post_id'] ?? 0);
         if (!$post_id) {
-            wp_send_json_error(['message' => __('Thiếu post ID.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Thiếu post ID.', 'acma-security-shield')], 400);
         }
 
         check_ajax_referer('wps_seo_ai_optimize_' . $post_id, 'nonce');
 
         if (!current_user_can('edit_post', $post_id)) {
-            wp_send_json_error(['message' => __('Bạn không có quyền chỉnh sửa bài viết này.', 'wp-plugin-security')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền chỉnh sửa bài viết này.', 'acma-security-shield')], 403);
         }
 
         $post = get_post($post_id);
         if (!$post) {
-            wp_send_json_error(['message' => __('Không tìm thấy bài viết.', 'wp-plugin-security')], 404);
+            wp_send_json_error(['message' => __('Không tìm thấy bài viết.', 'acma-security-shield')], 404);
         }
 
         $allowed_types = (array) $this->get_setting('seo_ai_post_types', $this->get_allowed_post_types());
         if (!in_array($post->post_type, $allowed_types, true)) {
-            wp_send_json_error(['message' => __('Loại bài viết này chưa được bật cho SEO AI.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Loại bài viết này chưa được bật cho SEO AI.', 'acma-security-shield')], 400);
         }
 
         $title = sanitize_text_field(wp_unslash($_POST['title'] ?? $post->post_title));
@@ -238,8 +238,8 @@ JS;
 
         wp_send_json_success([
             'message' => $payload['source'] === 'gemini'
-                ? __('Đã tối ưu SEO bằng Gemini và cập nhật Rank Math meta.', 'wp-plugin-security')
-                : __('Đã tối ưu SEO bằng logic nội bộ và cập nhật Rank Math meta.', 'wp-plugin-security'),
+                ? __('Đã tối ưu SEO bằng Gemini và cập nhật Rank Math meta.', 'acma-security-shield')
+                : __('Đã tối ưu SEO bằng logic nội bộ và cập nhật Rank Math meta.', 'acma-security-shield'),
             'focus_keyword' => $payload['focus_keyword'],
             'seo_title' => $payload['seo_title'],
             'seo_description' => $payload['seo_description'],
@@ -254,13 +254,13 @@ JS;
     public function ajax_bulk_scan()
     {
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(['message' => __('Bạn không có quyền quét hàng loạt SEO AI.', 'wp-plugin-security')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền quét hàng loạt SEO AI.', 'acma-security-shield')], 403);
         }
 
         check_ajax_referer('wps_seo_ai_bulk_scan', 'nonce');
 
         if (!$this->get_setting('seo_ai_enabled', false)) {
-            wp_send_json_error(['message' => __('Hãy bật SEO AI trước khi quét hàng loạt.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Hãy bật SEO AI trước khi quét hàng loạt.', 'acma-security-shield')], 400);
         }
 
         $page = max(1, absint($_POST['page'] ?? 1));
@@ -296,7 +296,7 @@ JS;
             'errors' => $errors,
             'done' => ($page >= (int) $batch['total_pages']) || empty($batch['ids']),
             'message' => sprintf(
-                __('Đã quét %1$d bài, lỗi %2$d bài.', 'wp-plugin-security'),
+                __('Đã quét %1$d bài, lỗi %2$d bài.', 'acma-security-shield'),
                 $processed,
                 $errors
             ),
@@ -309,13 +309,13 @@ JS;
     public function ajax_bulk_queue()
     {
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(['message' => __('Bạn không có quyền quét hàng loạt SEO AI.', 'wp-plugin-security')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền quét hàng loạt SEO AI.', 'acma-security-shield')], 403);
         }
 
         check_ajax_referer('wps_seo_ai_bulk_scan', 'nonce');
 
         if (!$this->get_setting('seo_ai_enabled', false)) {
-            wp_send_json_error(['message' => __('Hãy bật SEO AI trước khi quét hàng loạt.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Hãy bật SEO AI trước khi quét hàng loạt.', 'acma-security-shield')], 400);
         }
 
         $queue = $this->get_bulk_scan_queue();
@@ -332,32 +332,32 @@ JS;
     public function ajax_bulk_process_post()
     {
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(['message' => __('Bạn không có quyền quét hàng loạt SEO AI.', 'wp-plugin-security')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền quét hàng loạt SEO AI.', 'acma-security-shield')], 403);
         }
 
         check_ajax_referer('wps_seo_ai_bulk_scan', 'nonce');
 
         if (!$this->get_setting('seo_ai_enabled', false)) {
-            wp_send_json_error(['message' => __('Hãy bật SEO AI trước khi quét hàng loạt.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Hãy bật SEO AI trước khi quét hàng loạt.', 'acma-security-shield')], 400);
         }
 
         $post_id = absint($_POST['post_id'] ?? 0);
         if (!$post_id) {
-            wp_send_json_error(['message' => __('Thiếu post ID.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Thiếu post ID.', 'acma-security-shield')], 400);
         }
 
         $post = get_post($post_id);
         if (!$post) {
-            wp_send_json_error(['message' => __('Không tìm thấy bài viết.', 'wp-plugin-security')], 404);
+            wp_send_json_error(['message' => __('Không tìm thấy bài viết.', 'acma-security-shield')], 404);
         }
 
         $allowed_types = (array) $this->get_setting('seo_ai_post_types', $this->get_allowed_post_types());
         if (!in_array($post->post_type, $allowed_types, true)) {
-            wp_send_json_error(['message' => __('Loại bài viết này chưa được bật cho SEO AI.', 'wp-plugin-security')], 400);
+            wp_send_json_error(['message' => __('Loại bài viết này chưa được bật cho SEO AI.', 'acma-security-shield')], 400);
         }
 
         if (!current_user_can('edit_post', $post_id)) {
-            wp_send_json_error(['message' => __('Bạn không có quyền chỉnh sửa bài viết này.', 'wp-plugin-security')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền chỉnh sửa bài viết này.', 'acma-security-shield')], 403);
         }
 
         $payload = $this->generate_ai_copy($post, $post->post_title, $post->post_content);
@@ -371,8 +371,8 @@ JS;
             'post_id' => $post_id,
             'title' => $post->post_title,
             'message' => $payload['source'] === 'gemini'
-                ? __('Đã tối ưu SEO bằng Gemini và cập nhật Rank Math meta.', 'wp-plugin-security')
-                : __('Đã tối ưu SEO bằng logic nội bộ và cập nhật Rank Math meta.', 'wp-plugin-security'),
+                ? __('Đã tối ưu SEO bằng Gemini và cập nhật Rank Math meta.', 'acma-security-shield')
+                : __('Đã tối ưu SEO bằng logic nội bộ và cập nhật Rank Math meta.', 'acma-security-shield'),
             'focus_keyword' => $payload['focus_keyword'],
             'seo_title' => $payload['seo_title'],
             'seo_description' => $payload['seo_description'],
@@ -506,18 +506,18 @@ JS;
 
         $code = wp_remote_retrieve_response_code($response);
         if ($code < 200 || $code >= 300) {
-            return new \WP_Error('wps_gemini_http_error', sprintf(__('Gemini trả về lỗi HTTP %d.', 'wp-plugin-security'), $code));
+            return new \WP_Error('wps_gemini_http_error', sprintf(__('Gemini trả về lỗi HTTP %d.', 'acma-security-shield'), $code));
         }
 
         $data = json_decode(wp_remote_retrieve_body($response), true);
         $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
         if ($text === '') {
-            return new \WP_Error('wps_gemini_empty', __('Gemini không trả về nội dung hợp lệ.', 'wp-plugin-security'));
+            return new \WP_Error('wps_gemini_empty', __('Gemini không trả về nội dung hợp lệ.', 'acma-security-shield'));
         }
 
         $json = $this->parse_json_payload($text);
         if (!is_array($json)) {
-            return new \WP_Error('wps_gemini_parse_error', __('Không thể đọc JSON từ Gemini.', 'wp-plugin-security'));
+            return new \WP_Error('wps_gemini_parse_error', __('Không thể đọc JSON từ Gemini.', 'acma-security-shield'));
         }
 
         return $json;

@@ -23,12 +23,12 @@ class AdminController
      */
     public function add_plugin_action_links($links)
     {
-        $settings_url = admin_url('admin.php?page=wp-plugin-security');
+        $settings_url = admin_url('admin.php?page=acma-security-shield');
         $nonce = wp_create_nonce('wps_check_update_nonce');
 
         $custom_links = [
-            '<a href="' . esc_url($settings_url) . '">' . __('Cài đặt', 'wp-plugin-security') . '</a>',
-            '<a href="#" class="wps-check-update-btn" data-nonce="' . esc_attr($nonce) . '" style="color: #d63638; font-weight: bold;">' . __('Kiểm tra cập nhật', 'wp-plugin-security') . '</a>',
+            '<a href="' . esc_url($settings_url) . '">' . __('Cài đặt', 'acma-security-shield') . '</a>',
+            '<a href="#" class="wps-check-update-btn" data-nonce="' . esc_attr($nonce) . '" style="color: #d63638; font-weight: bold;">' . __('Kiểm tra cập nhật', 'acma-security-shield') . '</a>',
         ];
 
         return array_merge($custom_links, (array) $links);
@@ -40,7 +40,7 @@ class AdminController
     public function add_check_update_script()
     {
         $screen = get_current_screen();
-        if ($screen && !in_array($screen->id, ['plugins', 'toplevel_page_wp-plugin-security'])) {
+        if ($screen && !in_array($screen->id, ['plugins', 'toplevel_page_acma-security-shield'])) {
             return;
         }
         ?>
@@ -51,7 +51,7 @@ class AdminController
                 var btn = $(this);
                 var originalText = btn.text();
                 
-            btn.text('<?php echo esc_js(__('Đang kiểm tra...', 'wp-plugin-security')); ?>').css({'pointer-events': 'none', 'opacity': '0.6'});
+            btn.text('<?php echo esc_js(__('Đang kiểm tra...', 'acma-security-shield')); ?>').css({'pointer-events': 'none', 'opacity': '0.6'});
                 
                 $.ajax({
                     url: ajaxurl,
@@ -91,7 +91,7 @@ class AdminController
             'WP Security',
             'WP Security',
             'manage_options',
-            'wp-plugin-security',
+            'acma-security-shield',
             [$this, 'render_admin_page'],
             'dashicons-shield-alt',
             80

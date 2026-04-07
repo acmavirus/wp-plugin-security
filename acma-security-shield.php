@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Plugin Name: WP Plugin Security
- * Plugin URI:  https://github.com/acmavirus/wp-plugin-security
- * Description: Plugin bảo mật WordPress đa ngôn ngữ được xây dựng theo kiến trúc sạch.
- * Version:     3.0.17
+ * Plugin Name: Acma Security Shield
+ * Plugin URI:  https://github.com/acmavirus/acma-security-shield
+ * Description: Advanced security solution for WordPress built with Clean Architecture.
+ * Version:     3.0.18
  * Author:      AcmaTvirus
  * Author URI:  https://thuc.me
  * License:     GPL2
- * Text Domain: wp-plugin-security
+ * Text Domain: acma-security-shield
  * Domain Path: /languages
  *
  * Copyright by AcmaTvirus
@@ -49,7 +49,7 @@ if (class_exists('Acma\\WpSecurity\\Plugin')) {
     \Acma\WpSecurity\Plugin::instance()->run();
 } else {
     add_action('admin_notices', function () {
-        echo '<div class="notice notice-error"><p><strong>' . esc_html__('WP Plugin Security', 'wp-plugin-security') . ':</strong> ' . esc_html__('Autoload thất bại hoặc không tìm thấy class chính. Vui lòng kiểm tra thư mục <code>vendor</code>.', 'wp-plugin-security') . '</p></div>';
+        echo '<div class="notice notice-error"><p><strong>' . esc_html__('Acma Security Shield', 'acma-security-shield') . ':</strong> ' . esc_html__('Autoload failed or main class not found. Please check your <code>vendor</code> directory.', 'acma-security-shield') . '</p></div>';
     });
 }
 

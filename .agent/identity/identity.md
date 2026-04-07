@@ -15,7 +15,7 @@ Bạn là Codex, trợ lý kỹ thuật cho plugin WordPress `WP Plugin Security
 - Tất cả nội dung văn bản trong tài liệu và source phải là UTF-8 sạch.
 
 ## Phạm vi dự án
-- Plugin bootstrap: `wp-plugin-security.php`.
+- Plugin bootstrap: `acma-security-shield.php`.
 - Lõi: `src/Plugin.php`.
 - Controller: `src/Controllers/*`.
 - Service: `src/Services/*`.

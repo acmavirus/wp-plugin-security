@@ -45,12 +45,12 @@ class UpdateController
 
         if ($remote && version_compare($current_version, $remote->version, '<')) {
             wp_send_json_success([
-                'message' => sprintf(__('Có phiên bản mới: v%s. Đang tải lại trang...', 'wp-plugin-security'), $remote->version),
+                'message' => sprintf(__('Có phiên bản mới: v%s. Đang tải lại trang...', 'acma-security-shield'), $remote->version),
                 'has_update' => true,
             ]);
         } else {
             wp_send_json_success([
-                'message' => sprintf(__('Bạn đang sử dụng phiên bản mới nhất (%s)!', 'wp-plugin-security'), $current_version),
+                'message' => sprintf(__('Bạn đang sử dụng phiên bản mới nhất (%s)!', 'acma-security-shield'), $current_version),
                 'has_update' => false,
             ]);
         }
@@ -61,7 +61,7 @@ class UpdateController
      */
     public function plugin_info($res, $action, $args)
     {
-        $plugin_slug = 'wp-plugin-security';
+        $plugin_slug = 'acma-security-shield';
 
         if ($action !== 'plugin_information' || $args->slug !== $plugin_slug) {
             return $res;
@@ -80,8 +80,8 @@ class UpdateController
         $res->homepage = $remote->url;
         $res->download_link = $remote->zip_url;
         $res->sections = [
-            'description' => __('Giải pháp bảo mật toàn diện cho WordPress. Cập nhật trực tiếp từ GitHub Releases.', 'wp-plugin-security'),
-            'changelog' => $remote->body ?? sprintf(__('Theo dõi các thay đổi mới nhất tại: %s', 'wp-plugin-security'), $remote->url),
+            'description' => __('Giải pháp bảo mật toàn diện cho WordPress. Cập nhật trực tiếp từ GitHub Releases.', 'acma-security-shield'),
+            'changelog' => $remote->body ?? sprintf(__('Theo dõi các thay đổi mới nhất tại: %s', 'acma-security-shield'), $remote->url),
         ];
 
         return $res;

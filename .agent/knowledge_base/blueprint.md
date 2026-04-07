@@ -3,7 +3,7 @@
 Tài liệu này phản ánh cấu trúc thực tế của plugin ở thời điểm hiện tại.
 
 ## 1. Entry point
-- `wp-plugin-security.php`
+- `acma-security-shield.php`
 - Nhiệm vụ:
   - chặn truy cập trực tiếp,
   - khai báo hằng plugin,

@@ -51,7 +51,7 @@ class Plugin
     public function load_textdomain()
     {
         load_plugin_textdomain(
-            'wp-plugin-security',
+            'acma-security-shield',
             false,
             dirname(plugin_basename(WPS_PLUGIN_FILE)) . '/languages'
         );

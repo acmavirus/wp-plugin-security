@@ -43,12 +43,12 @@ class MonitoringController
         ?>
         <form method="post" action="">
             <?php wp_nonce_field('wps_settings_action', 'wps_settings_nonce'); ?>
-            <h2><?php esc_html_e('Giám sát & Phòng thủ nâng cao', 'wp-plugin-security'); ?></h2>
-            <p class="description"><?php esc_html_e('Mục này gồm rate limit, geoblocking, chặn uploads PHP, 404 monitoring và các bộ quét.', 'wp-plugin-security'); ?></p>
+            <h2><?php esc_html_e('Giám sát & Phòng thủ nâng cao', 'acma-security-shield'); ?></h2>
+            <p class="description"><?php esc_html_e('Mục này gồm rate limit, geoblocking, chặn uploads PHP, 404 monitoring và các bộ quét.', 'acma-security-shield'); ?></p>
 
             <div class="wps-grid two">
                 <div class="wps-card">
-                    <h4><?php esc_html_e('Rate limit & Geo block', 'wp-plugin-security'); ?></h4>
+                    <h4><?php esc_html_e('Rate limit & Geo block', 'acma-security-shield'); ?></h4>
                     <table class="form-table wps-form-table" role="presentation">
                         <?php $this->render_checkbox_row('monitoring_enabled', 'Bật giám sát', $main_settings, 'Kích hoạt các lớp phòng thủ runtime cho site.'); ?>
                         <?php $this->render_checkbox_row('rate_limit_enabled', 'Bật rate limit', $main_settings, 'Giới hạn request theo IP và theo đường dẫn request.'); ?>
@@ -57,27 +57,27 @@ class MonitoringController
                         <?php $this->render_number_row('rate_limit_path_max_requests', 'Số request/đường dẫn', $main_settings, 30, 'Chặn khi một IP spam cùng đường dẫn.'); ?>
                         <?php $this->render_checkbox_row('geo_block_enabled', 'Bật geoblocking', $main_settings, 'Chặn hoặc cho phép truy cập theo mã quốc gia.'); ?>
                         <tr>
-                            <th scope="row"><label for="geo_block_mode"><?php esc_html_e('Chế độ', 'wp-plugin-security'); ?></label></th>
+                            <th scope="row"><label for="geo_block_mode"><?php esc_html_e('Chế độ', 'acma-security-shield'); ?></label></th>
                             <td>
                                 <select id="geo_block_mode" name="geo_block_mode">
-                                    <option value="deny" <?php selected(($main_settings['geo_block_mode'] ?? 'deny'), 'deny'); ?>><?php esc_html_e('Chặn quốc gia trong danh sách', 'wp-plugin-security'); ?></option>
-                                    <option value="allow" <?php selected(($main_settings['geo_block_mode'] ?? 'deny'), 'allow'); ?>><?php esc_html_e('Chỉ cho phép quốc gia trong danh sách', 'wp-plugin-security'); ?></option>
+                                    <option value="deny" <?php selected(($main_settings['geo_block_mode'] ?? 'deny'), 'deny'); ?>><?php esc_html_e('Chặn quốc gia trong danh sách', 'acma-security-shield'); ?></option>
+                                    <option value="allow" <?php selected(($main_settings['geo_block_mode'] ?? 'deny'), 'allow'); ?>><?php esc_html_e('Chỉ cho phép quốc gia trong danh sách', 'acma-security-shield'); ?></option>
                                 </select>
-                                <p class="description"><?php esc_html_e('Dùng mã ISO 2 ký tự, ví dụ: VN, CN, RU, US.', 'wp-plugin-security'); ?></p>
+                                <p class="description"><?php esc_html_e('Dùng mã ISO 2 ký tự, ví dụ: VN, CN, RU, US.', 'acma-security-shield'); ?></p>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row"><label for="geo_block_countries"><?php esc_html_e('Mã quốc gia', 'wp-plugin-security'); ?></label></th>
+                            <th scope="row"><label for="geo_block_countries"><?php esc_html_e('Mã quốc gia', 'acma-security-shield'); ?></label></th>
                             <td>
                                 <textarea id="geo_block_countries" name="geo_block_countries" rows="4" class="large-text code"><?php echo esc_textarea($geo_countries); ?></textarea>
-                                <p class="description"><?php esc_html_e('Ngăn cách bằng dấu phẩy hoặc xuống dòng.', 'wp-plugin-security'); ?></p>
+                                <p class="description"><?php esc_html_e('Ngăn cách bằng dấu phẩy hoặc xuống dòng.', 'acma-security-shield'); ?></p>
                             </td>
                         </tr>
                     </table>
                 </div>
 
                 <div class="wps-card">
-                    <h4><?php esc_html_e('Uploads & 404', 'wp-plugin-security'); ?></h4>
+                    <h4><?php esc_html_e('Uploads & 404', 'acma-security-shield'); ?></h4>
                     <table class="form-table wps-form-table" role="presentation">
                         <?php $this->render_checkbox_row('uploads_php_protection', 'Chặn PHP trong uploads', $main_settings, 'Tự chặn truy cập file PHP trong wp-content/uploads.'); ?>
                         <?php $this->render_checkbox_row('monitor_404_enabled', 'Theo dõi 404', $main_settings, 'Ghi nhận IP quét trang lỗi 404 và chặn tự động nếu vượt ngưỡng.'); ?>
@@ -85,38 +85,38 @@ class MonitoringController
                         <?php $this->render_number_row('monitor_404_threshold', 'Ngưỡng 404', $main_settings, 6, 'Số lần 404 trong cửa sổ thời gian.'); ?>
                         <?php $this->render_number_row('monitor_404_window_minutes', 'Cửa sổ 404 (phút)', $main_settings, 10, 'Khoảng thời gian để đếm 404.'); ?>
                     </table>
-                    <p class="description"><?php esc_html_e('Uploads protection được áp dụng bằng .htaccess nếu server hỗ trợ.', 'wp-plugin-security'); ?></p>
+                    <p class="description"><?php esc_html_e('Uploads protection được áp dụng bằng .htaccess nếu server hỗ trợ.', 'acma-security-shield'); ?></p>
                     <p>
-                        <button type="button" class="button button-secondary" id="wps-apply-uploads-protection" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Áp dụng uploads protection', 'wp-plugin-security'); ?></button>
+                        <button type="button" class="button button-secondary" id="wps-apply-uploads-protection" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Áp dụng uploads protection', 'acma-security-shield'); ?></button>
                         <span id="wps-apply-uploads-status" class="description" style="margin-left: 12px;"></span>
                     </p>
                 </div>
             </div>
 
             <div class="wps-card" style="margin-top: 20px;">
-                <h4><?php esc_html_e('Automation', 'wp-plugin-security'); ?></h4>
+                <h4><?php esc_html_e('Automation', 'acma-security-shield'); ?></h4>
                 <table class="form-table wps-form-table" role="presentation">
                     <?php $this->render_checkbox_row('monitoring_cron_enabled', 'Bật quét định kỳ', $main_settings, 'Tự động quét theo lịch WP-Cron.'); ?>
                     <?php $this->render_checkbox_row('monitoring_email_alerts', 'Gửi email cảnh báo', $main_settings, 'Gửi báo cáo khi phát hiện thay đổi hoặc file nghi ngờ.'); ?>
                     <tr>
-                        <th scope="row"><label for="monitoring_cron_frequency"><?php esc_html_e('Tần suất', 'wp-plugin-security'); ?></label></th>
+                        <th scope="row"><label for="monitoring_cron_frequency"><?php esc_html_e('Tần suất', 'acma-security-shield'); ?></label></th>
                         <td>
                             <select id="monitoring_cron_frequency" name="monitoring_cron_frequency">
-                                <option value="hourly" <?php selected(($main_settings['monitoring_cron_frequency'] ?? 'daily'), 'hourly'); ?>><?php esc_html_e('Mỗi giờ', 'wp-plugin-security'); ?></option>
-                                <option value="twicedaily" <?php selected(($main_settings['monitoring_cron_frequency'] ?? 'daily'), 'twicedaily'); ?>><?php esc_html_e('2 lần/ngày', 'wp-plugin-security'); ?></option>
-                                <option value="daily" <?php selected(($main_settings['monitoring_cron_frequency'] ?? 'daily'), 'daily'); ?>><?php esc_html_e('Hàng ngày', 'wp-plugin-security'); ?></option>
+                                <option value="hourly" <?php selected(($main_settings['monitoring_cron_frequency'] ?? 'daily'), 'hourly'); ?>><?php esc_html_e('Mỗi giờ', 'acma-security-shield'); ?></option>
+                                <option value="twicedaily" <?php selected(($main_settings['monitoring_cron_frequency'] ?? 'daily'), 'twicedaily'); ?>><?php esc_html_e('2 lần/ngày', 'acma-security-shield'); ?></option>
+                                <option value="daily" <?php selected(($main_settings['monitoring_cron_frequency'] ?? 'daily'), 'daily'); ?>><?php esc_html_e('Hàng ngày', 'acma-security-shield'); ?></option>
                             </select>
                         </td>
                     </tr>
                 </table>
-                <p class="description"><?php esc_html_e('Khi bật, plugin sẽ tự chạy integrity + malware + vulnerability scan theo lịch.', 'wp-plugin-security'); ?></p>
+                <p class="description"><?php esc_html_e('Khi bật, plugin sẽ tự chạy integrity + malware + vulnerability scan theo lịch.', 'acma-security-shield'); ?></p>
                 <?php if (!empty($last_cron_scan['time'])) : ?>
-                    <p class="description"><?php echo esc_html(sprintf(__('Lần quét gần nhất: %s', 'wp-plugin-security'), $last_cron_scan['time'])); ?></p>
+                    <p class="description"><?php echo esc_html(sprintf(__('Lần quét gần nhất: %s', 'acma-security-shield'), $last_cron_scan['time'])); ?></p>
                 <?php endif; ?>
             </div>
 
             <div class="wps-card" style="margin-top: 20px;">
-                <h4><?php esc_html_e('Scanners', 'wp-plugin-security'); ?></h4>
+                <h4><?php esc_html_e('Scanners', 'acma-security-shield'); ?></h4>
                 <table class="form-table wps-form-table" role="presentation">
                     <?php $this->render_checkbox_row('monitoring_scan_integrity', 'Quét integrity', $main_settings, 'So sánh file hiện tại với snapshot baseline đã lưu.'); ?>
                     <?php $this->render_checkbox_row('monitoring_scan_malware', 'Quét malware', $main_settings, 'Tìm pattern nghi ngờ trong file PHP/JS/HTML.'); ?>
@@ -124,9 +124,9 @@ class MonitoringController
                 </table>
 
                 <p>
-                    <button type="button" class="button button-primary" id="wps-scan-integrity" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Quét integrity', 'wp-plugin-security'); ?></button>
-                    <button type="button" class="button" id="wps-scan-malware" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Quét malware', 'wp-plugin-security'); ?></button>
-                    <button type="button" class="button" id="wps-scan-vulnerability" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Quét lỗ hổng', 'wp-plugin-security'); ?></button>
+                    <button type="button" class="button button-primary" id="wps-scan-integrity" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Quét integrity', 'acma-security-shield'); ?></button>
+                    <button type="button" class="button" id="wps-scan-malware" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Quét malware', 'acma-security-shield'); ?></button>
+                    <button type="button" class="button" id="wps-scan-vulnerability" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Quét lỗ hổng', 'acma-security-shield'); ?></button>
                     <span id="wps-monitoring-scan-status" class="description" style="margin-left: 12px;"></span>
                 </p>
 
@@ -134,35 +134,35 @@ class MonitoringController
                     <div style="height: 16px; border-radius: 999px; background: #e6edf3; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);">
                         <div id="wps-monitoring-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #1167ad 0%, #00a3c4 100%); transition: width 180ms ease;"></div>
                     </div>
-                    <div id="wps-monitoring-progress-text" class="description" style="margin-top: 8px;"><?php esc_html_e('Chưa bắt đầu quét.', 'wp-plugin-security'); ?></div>
+                    <div id="wps-monitoring-progress-text" class="description" style="margin-top: 8px;"><?php esc_html_e('Chưa bắt đầu quét.', 'acma-security-shield'); ?></div>
                 </div>
 
                 <div style="margin-top: 18px;">
-                    <div class="description" style="margin-bottom: 8px;"><?php esc_html_e('Kết quả sẽ hiển thị tại đây:', 'wp-plugin-security'); ?></div>
+                    <div class="description" style="margin-bottom: 8px;"><?php esc_html_e('Kết quả sẽ hiển thị tại đây:', 'acma-security-shield'); ?></div>
                     <ol id="wps-monitoring-results" style="margin: 0; padding-left: 20px; max-height: 320px; overflow: auto; background: #f8fbfe; border: 1px solid #d9e3ef; border-radius: 12px; padding-top: 12px; padding-bottom: 12px;"></ol>
                 </div>
                 <p style="margin-top: 16px;">
-                    <button type="button" class="button" id="wps-reset-baseline" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Tạo baseline mới', 'wp-plugin-security'); ?></button>
+                    <button type="button" class="button" id="wps-reset-baseline" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Tạo baseline mới', 'acma-security-shield'); ?></button>
                     <span id="wps-reset-baseline-status" class="description" style="margin-left: 12px;"></span>
                 </p>
             </div>
 
             <div class="wps-card" style="margin-top: 20px;">
-                <h4><?php esc_html_e('Quarantine', 'wp-plugin-security'); ?></h4>
-                <p class="description"><?php esc_html_e('Các file đã cách ly sẽ xuất hiện ở đây để bạn khôi phục khi cần.', 'wp-plugin-security'); ?></p>
+                <h4><?php esc_html_e('Quarantine', 'acma-security-shield'); ?></h4>
+                <p class="description"><?php esc_html_e('Các file đã cách ly sẽ xuất hiện ở đây để bạn khôi phục khi cần.', 'acma-security-shield'); ?></p>
                 <ol id="wps-quarantine-list" style="margin: 0; padding-left: 20px; max-height: 260px; overflow: auto; background: #f8fbfe; border: 1px solid #d9e3ef; border-radius: 12px; padding-top: 12px; padding-bottom: 12px;">
                     <?php foreach ($quarantine_map as $original_path => $backup_path) : ?>
                         <li data-path="<?php echo esc_attr($original_path); ?>" style="margin: 0 0 10px 0; padding: 8px 12px; background: #fff; border-left: 4px solid #8b5cf6; border-radius: 8px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
                             <span style="font-weight: 600;"><?php echo esc_html($this->relativize_path($original_path)); ?></span>
                             <span class="description"><?php echo esc_html($this->relativize_path($backup_path)); ?></span>
-                            <button type="button" class="button button-small wps-restore-file-btn" data-path="<?php echo esc_attr($original_path); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Phục hồi', 'wp-plugin-security'); ?></button>
+                            <button type="button" class="button button-small wps-restore-file-btn" data-path="<?php echo esc_attr($original_path); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('wps_monitoring_nonce')); ?>"><?php esc_html_e('Phục hồi', 'acma-security-shield'); ?></button>
                         </li>
                     <?php endforeach; ?>
                 </ol>
             </div>
 
             <input type="hidden" name="wps_save_settings" value="1">
-            <?php submit_button(__('Lưu thiết lập Giám sát', 'wp-plugin-security')); ?>
+            <?php submit_button(__('Lưu thiết lập Giám sát', 'acma-security-shield')); ?>
         </form>
         <script>
         (function(){
@@ -233,17 +233,17 @@ class MonitoringController
                         var quarantineButton = document.createElement('button');
                         quarantineButton.type = 'button';
                         quarantineButton.className = 'button button-small';
-                        quarantineButton.textContent = '<?php echo esc_js(__('Cách ly', 'wp-plugin-security')); ?>';
+                        quarantineButton.textContent = '<?php echo esc_js(__('Cách ly', 'acma-security-shield')); ?>';
                         quarantineButton.addEventListener('click', function(event){
                             event.preventDefault();
                             quarantineButton.disabled = true;
                             post('wps_monitoring_quarantine_file', { nonce: scanButtons.integrity ? scanButtons.integrity.getAttribute('data-nonce') : '', path: item.path }).then(function(payload){
                                 if (!payload || !payload.success) {
-                                    throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Không thể cách ly file.', 'wp-plugin-security')); ?>');
+                                    throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Không thể cách ly file.', 'acma-security-shield')); ?>');
                                 }
-                                setStatus((payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Đã cách ly file.', 'wp-plugin-security')); ?>');
+                                setStatus((payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Đã cách ly file.', 'acma-security-shield')); ?>');
                             }).catch(function(error){
-                                setStatus(error && error.message ? error.message : '<?php echo esc_js(__('Không thể cách ly file.', 'wp-plugin-security')); ?>');
+                                setStatus(error && error.message ? error.message : '<?php echo esc_js(__('Không thể cách ly file.', 'acma-security-shield')); ?>');
                             }).finally(function(){
                                 quarantineButton.disabled = false;
                             });
@@ -279,20 +279,20 @@ class MonitoringController
             function runScan(action, button, label) {
                 button.disabled = true;
                 setStatus(label + '...');
-                setProgress(15, '<?php echo esc_js(__('Đang quét...', 'wp-plugin-security')); ?>');
+                setProgress(15, '<?php echo esc_js(__('Đang quét...', 'acma-security-shield')); ?>');
 
                 return post(action, { nonce: button.getAttribute('data-nonce') }).then(function(payload){
                     if (!payload || !payload.success) {
-                        throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Quét thất bại.', 'wp-plugin-security')); ?>');
+                        throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Quét thất bại.', 'acma-security-shield')); ?>');
                     }
 
                     var data = payload.data || {};
                     renderResults(Array.isArray(data.items) ? data.items : []);
-                    setStatus(data.message || '<?php echo esc_js(__('Hoàn tất.', 'wp-plugin-security')); ?>');
-                    setProgress(100, data.summary || '<?php echo esc_js(__('Đã quét xong.', 'wp-plugin-security')); ?>');
+                    setStatus(data.message || '<?php echo esc_js(__('Hoàn tất.', 'acma-security-shield')); ?>');
+                    setProgress(100, data.summary || '<?php echo esc_js(__('Đã quét xong.', 'acma-security-shield')); ?>');
                 }).catch(function(error){
-                    setStatus(error && error.message ? error.message : '<?php echo esc_js(__('Quét thất bại.', 'wp-plugin-security')); ?>');
-                    setProgress(0, '<?php echo esc_js(__('Chưa bắt đầu quét.', 'wp-plugin-security')); ?>');
+                    setStatus(error && error.message ? error.message : '<?php echo esc_js(__('Quét thất bại.', 'acma-security-shield')); ?>');
+                    setProgress(0, '<?php echo esc_js(__('Chưa bắt đầu quét.', 'acma-security-shield')); ?>');
                 }).finally(function(){
                     button.disabled = false;
                 });
@@ -313,15 +313,15 @@ class MonitoringController
                 applyUploadsButton.addEventListener('click', function(event){
                     event.preventDefault();
                     applyUploadsButton.disabled = true;
-                    setStatus('<?php echo esc_js(__('Đang áp dụng uploads protection...', 'wp-plugin-security')); ?>');
+                    setStatus('<?php echo esc_js(__('Đang áp dụng uploads protection...', 'acma-security-shield')); ?>');
                     post('wps_monitoring_apply_uploads_protection', { nonce: applyUploadsButton.getAttribute('data-nonce') }).then(function(payload){
                         if (!payload || !payload.success) {
-                            throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Không thể áp dụng uploads protection.', 'wp-plugin-security')); ?>');
+                            throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Không thể áp dụng uploads protection.', 'acma-security-shield')); ?>');
                         }
 
-                        setStatus((payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Đã áp dụng uploads protection.', 'wp-plugin-security')); ?>');
+                        setStatus((payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Đã áp dụng uploads protection.', 'acma-security-shield')); ?>');
                     }).catch(function(error){
-                        setStatus(error && error.message ? error.message : '<?php echo esc_js(__('Không thể áp dụng uploads protection.', 'wp-plugin-security')); ?>');
+                        setStatus(error && error.message ? error.message : '<?php echo esc_js(__('Không thể áp dụng uploads protection.', 'acma-security-shield')); ?>');
                     }).finally(function(){
                         applyUploadsButton.disabled = false;
                     });
@@ -333,20 +333,20 @@ class MonitoringController
                     event.preventDefault();
                     resetBaselineButton.disabled = true;
                     if (resetBaselineStatus) {
-                        resetBaselineStatus.textContent = '<?php echo esc_js(__('Đang tạo baseline...', 'wp-plugin-security')); ?>';
+                        resetBaselineStatus.textContent = '<?php echo esc_js(__('Đang tạo baseline...', 'acma-security-shield')); ?>';
                     }
 
                     post('wps_monitoring_reset_baseline', { nonce: resetBaselineButton.getAttribute('data-nonce') }).then(function(payload){
                         if (!payload || !payload.success) {
-                            throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Không thể tạo baseline mới.', 'wp-plugin-security')); ?>');
+                            throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Không thể tạo baseline mới.', 'acma-security-shield')); ?>');
                         }
 
                         if (resetBaselineStatus) {
-                            resetBaselineStatus.textContent = (payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Đã tạo baseline mới.', 'wp-plugin-security')); ?>';
+                            resetBaselineStatus.textContent = (payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Đã tạo baseline mới.', 'acma-security-shield')); ?>';
                         }
                     }).catch(function(error){
                         if (resetBaselineStatus) {
-                            resetBaselineStatus.textContent = error && error.message ? error.message : '<?php echo esc_js(__('Không thể tạo baseline mới.', 'wp-plugin-security')); ?>';
+                            resetBaselineStatus.textContent = error && error.message ? error.message : '<?php echo esc_js(__('Không thể tạo baseline mới.', 'acma-security-shield')); ?>';
                         }
                     }).finally(function(){
                         resetBaselineButton.disabled = false;
@@ -365,7 +365,7 @@ class MonitoringController
                     button.disabled = true;
                     post('wps_monitoring_restore_file', { nonce: button.getAttribute('data-nonce'), path: button.getAttribute('data-path') }).then(function(payload){
                         if (!payload || !payload.success) {
-                            throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Không thể phục hồi file.', 'wp-plugin-security')); ?>');
+                            throw new Error((payload && payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Không thể phục hồi file.', 'acma-security-shield')); ?>');
                         }
 
                         var item = button.closest('li');
@@ -373,9 +373,9 @@ class MonitoringController
                             item.remove();
                         }
 
-                        setStatus((payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Đã phục hồi file.', 'wp-plugin-security')); ?>');
+                        setStatus((payload.data && payload.data.message) ? payload.data.message : '<?php echo esc_js(__('Đã phục hồi file.', 'acma-security-shield')); ?>');
                     }).catch(function(error){
-                        setStatus(error && error.message ? error.message : '<?php echo esc_js(__('Không thể phục hồi file.', 'wp-plugin-security')); ?>');
+                        setStatus(error && error.message ? error.message : '<?php echo esc_js(__('Không thể phục hồi file.', 'acma-security-shield')); ?>');
                     }).finally(function(){
                         button.disabled = false;
                     });
@@ -469,7 +469,7 @@ class MonitoringController
 
         return [
             'success' => true,
-            'message' => sprintf(__('Đã tạo baseline mới cho %d file.', 'wp-plugin-security'), count($baseline)),
+            'message' => sprintf(__('Đã tạo baseline mới cho %d file.', 'acma-security-shield'), count($baseline)),
         ];
     }
 
@@ -556,8 +556,8 @@ class MonitoringController
 
         if ($has_issue && $this->security_service->get_setting('monitoring_email_alerts', true)) {
             $to = get_option('admin_email');
-            $subject = sprintf('[%s] %s', get_bloginfo('name'), __('Cảnh báo bảo mật từ WP Plugin Security', 'wp-plugin-security'));
-            $body = implode("\n", $summary_lines) . "\n\n" . __('Hãy mở trang quản trị để xem chi tiết.', 'wp-plugin-security');
+            $subject = sprintf('[%s] %s', get_bloginfo('name'), __('Cảnh báo bảo mật từ WP Plugin Security', 'acma-security-shield'));
+            $body = implode("\n", $summary_lines) . "\n\n" . __('Hãy mở trang quản trị để xem chi tiết.', 'acma-security-shield');
             wp_mail($to, $subject, $body);
         }
 
@@ -576,14 +576,14 @@ class MonitoringController
         if ($path === '' || !file_exists($path) || !is_file($path)) {
             return [
                 'success' => false,
-                'message' => __('File không hợp lệ.', 'wp-plugin-security'),
+                'message' => __('File không hợp lệ.', 'acma-security-shield'),
             ];
         }
 
         if (!$this->is_quarantine_allowed_path($path)) {
             return [
                 'success' => false,
-                'message' => __('Không cho phép cách ly file này.', 'wp-plugin-security'),
+                'message' => __('Không cho phép cách ly file này.', 'acma-security-shield'),
             ];
         }
 
@@ -591,7 +591,7 @@ class MonitoringController
         if (!wp_mkdir_p($quarantine_dir)) {
             return [
                 'success' => false,
-                'message' => __('Không tạo được thư mục quarantine.', 'wp-plugin-security'),
+                'message' => __('Không tạo được thư mục quarantine.', 'acma-security-shield'),
             ];
         }
 
@@ -601,14 +601,14 @@ class MonitoringController
         if (!@copy($path, $dest)) {
             return [
                 'success' => false,
-                'message' => __('Không sao lưu được file.', 'wp-plugin-security'),
+                'message' => __('Không sao lưu được file.', 'acma-security-shield'),
             ];
         }
 
         if (!@unlink($path)) {
             return [
                 'success' => false,
-                'message' => __('Đã sao lưu nhưng không thể xóa file gốc.', 'wp-plugin-security'),
+                'message' => __('Đã sao lưu nhưng không thể xóa file gốc.', 'acma-security-shield'),
             ];
         }
 
@@ -619,7 +619,7 @@ class MonitoringController
 
         return [
             'success' => true,
-            'message' => sprintf(__('Đã cách ly file: %s', 'wp-plugin-security'), $this->relativize_path($path)),
+            'message' => sprintf(__('Đã cách ly file: %s', 'acma-security-shield'), $this->relativize_path($path)),
         ];
     }
 
@@ -632,7 +632,7 @@ class MonitoringController
         if ($path === '') {
             return [
                 'success' => false,
-                'message' => __('File không hợp lệ.', 'wp-plugin-security'),
+                'message' => __('File không hợp lệ.', 'acma-security-shield'),
             ];
         }
 
@@ -643,7 +643,7 @@ class MonitoringController
         if ($backup === '' || !file_exists($backup)) {
             return [
                 'success' => false,
-                'message' => __('Không tìm thấy bản sao trong quarantine.', 'wp-plugin-security'),
+                'message' => __('Không tìm thấy bản sao trong quarantine.', 'acma-security-shield'),
             ];
         }
 
@@ -651,14 +651,14 @@ class MonitoringController
         if (!is_dir($target_dir) && !wp_mkdir_p($target_dir)) {
             return [
                 'success' => false,
-                'message' => __('Không tạo được thư mục gốc để phục hồi.', 'wp-plugin-security'),
+                'message' => __('Không tạo được thư mục gốc để phục hồi.', 'acma-security-shield'),
             ];
         }
 
         if (!@copy($backup, $path)) {
             return [
                 'success' => false,
-                'message' => __('Không thể phục hồi file.', 'wp-plugin-security'),
+                'message' => __('Không thể phục hồi file.', 'acma-security-shield'),
             ];
         }
 
@@ -669,7 +669,7 @@ class MonitoringController
 
         return [
             'success' => true,
-            'message' => sprintf(__('Đã phục hồi file: %s', 'wp-plugin-security'), $this->relativize_path($path)),
+            'message' => sprintf(__('Đã phục hồi file: %s', 'acma-security-shield'), $this->relativize_path($path)),
         ];
     }
 
@@ -728,7 +728,7 @@ class MonitoringController
     private function require_admin_ajax()
     {
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(['message' => __('Bạn không có quyền thực hiện thao tác này.', 'wp-plugin-security')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền thực hiện thao tác này.', 'acma-security-shield')], 403);
         }
 
         check_ajax_referer('wps_monitoring_nonce', 'nonce');
@@ -768,7 +768,7 @@ class MonitoringController
             foreach (array_slice($files, 0, 50) as $file) {
                 $items[] = [
                     'title' => $file['label'],
-                    'meta' => __('Đã lưu baseline ban đầu.', 'wp-plugin-security'),
+                    'meta' => __('Đã lưu baseline ban đầu.', 'acma-security-shield'),
                     'color' => '#1f7a3f',
                     'path' => $file['path'],
                 ];
@@ -777,8 +777,8 @@ class MonitoringController
             $summary['clean'] = count($files);
 
             return [
-                'message' => __('Chưa có baseline trước đó, plugin đã tạo baseline mới.', 'wp-plugin-security'),
-                'summary' => sprintf(__('Baseline đã được lưu cho %d file.', 'wp-plugin-security'), count($baseline)),
+                'message' => __('Chưa có baseline trước đó, plugin đã tạo baseline mới.', 'acma-security-shield'),
+                'summary' => sprintf(__('Baseline đã được lưu cho %d file.', 'acma-security-shield'), count($baseline)),
                 'items' => $items,
                 'baseline_created' => true,
             ];
@@ -795,7 +795,7 @@ class MonitoringController
                 $summary['new']++;
                 $items[] = [
                     'title' => $file['label'],
-                    'meta' => __('File mới xuất hiện', 'wp-plugin-security'),
+                    'meta' => __('File mới xuất hiện', 'acma-security-shield'),
                     'color' => '#b36b00',
                     'path' => $file['path'],
                     'can_quarantine' => true,
@@ -807,7 +807,7 @@ class MonitoringController
                 $summary['missing']++;
                 $items[] = [
                     'title' => $file['label'],
-                    'meta' => __('Không đọc được file', 'wp-plugin-security'),
+                    'meta' => __('Không đọc được file', 'acma-security-shield'),
                     'color' => '#b42318',
                     'path' => $file['path'],
                     'can_quarantine' => true,
@@ -819,7 +819,7 @@ class MonitoringController
                 $summary['changed']++;
                 $items[] = [
                     'title' => $file['label'],
-                    'meta' => __('Đã thay đổi so với baseline', 'wp-plugin-security'),
+                    'meta' => __('Đã thay đổi so với baseline', 'acma-security-shield'),
                     'color' => '#b42318',
                     'path' => $file['path'],
                     'can_quarantine' => true,
@@ -837,16 +837,16 @@ class MonitoringController
             $summary['missing']++;
             $items[] = [
                 'title' => $this->relativize_path($missing_path),
-                'meta' => __('File trong baseline nhưng hiện không còn tồn tại', 'wp-plugin-security'),
+                'meta' => __('File trong baseline nhưng hiện không còn tồn tại', 'acma-security-shield'),
                 'color' => '#8b5cf6',
                 'path' => $missing_path,
             ];
         }
 
         return [
-            'message' => __('Quét integrity hoàn tất.', 'wp-plugin-security'),
+            'message' => __('Quét integrity hoàn tất.', 'acma-security-shield'),
             'summary' => sprintf(
-                __('Tổng: %1$d | Sạch: %2$d | Đổi: %3$d | Mới: %4$d | Mất: %5$d', 'wp-plugin-security'),
+                __('Tổng: %1$d | Sạch: %2$d | Đổi: %3$d | Mới: %4$d | Mất: %5$d', 'acma-security-shield'),
                 (int) $summary['total'],
                 (int) $summary['clean'],
                 (int) $summary['changed'],
@@ -889,9 +889,9 @@ class MonitoringController
         }
 
         return [
-            'message' => __('Quét malware hoàn tất.', 'wp-plugin-security'),
+            'message' => __('Quét malware hoàn tất.', 'acma-security-shield'),
             'summary' => sprintf(
-                __('Tổng: %1$d | Sạch: %2$d | Nghi ngờ: %3$d', 'wp-plugin-security'),
+                __('Tổng: %1$d | Sạch: %2$d | Nghi ngờ: %3$d', 'acma-security-shield'),
                 (int) $summary['total'],
                 (int) $summary['clean'],
                 (int) $summary['suspicious']
@@ -931,14 +931,14 @@ class MonitoringController
 
         if ($core_latest !== '' && version_compare($core_version, $core_latest, '<')) {
             $items[] = [
-                'title' => __('WordPress core', 'wp-plugin-security'),
-                'meta' => sprintf(__('Đang dùng %1$s, có bản mới %2$s', 'wp-plugin-security'), $core_version, $core_latest),
+                'title' => __('WordPress core', 'acma-security-shield'),
+                'meta' => sprintf(__('Đang dùng %1$s, có bản mới %2$s', 'acma-security-shield'), $core_version, $core_latest),
                 'color' => '#b42318',
             ];
         } else {
             $items[] = [
-                'title' => __('WordPress core', 'wp-plugin-security'),
-                'meta' => sprintf(__('Phiên bản hiện tại: %s', 'wp-plugin-security'), $core_version),
+                'title' => __('WordPress core', 'acma-security-shield'),
+                'meta' => sprintf(__('Phiên bản hiện tại: %s', 'acma-security-shield'), $core_version),
                 'color' => '#1f7a3f',
             ];
         }
@@ -960,8 +960,8 @@ class MonitoringController
             $items[] = [
                 'title' => $plugin_data['Name'],
                 'meta' => $has_update
-                    ? sprintf(__('Plugin %1$s có bản cập nhật %2$s', 'wp-plugin-security'), $plugin_data['Version'] ?? '0.0.0', $plugin_updates->response[$plugin_file]->new_version ?? '')
-                    : sprintf(__('Plugin version: %s', 'wp-plugin-security'), $plugin_data['Version'] ?? '0.0.0'),
+                    ? sprintf(__('Plugin %1$s có bản cập nhật %2$s', 'acma-security-shield'), $plugin_data['Version'] ?? '0.0.0', $plugin_updates->response[$plugin_file]->new_version ?? '')
+                    : sprintf(__('Plugin version: %s', 'acma-security-shield'), $plugin_data['Version'] ?? '0.0.0'),
                 'color' => $has_update ? '#b36b00' : '#1f7a3f',
             ];
         }
@@ -971,16 +971,16 @@ class MonitoringController
         $theme_slug = $theme->get_stylesheet();
         $has_theme_update = is_object($theme_updates) && !empty($theme_updates->response[$theme_slug]);
         $items[] = [
-            'title' => $theme->get('Name') ?: __('Theme hiện tại', 'wp-plugin-security'),
+            'title' => $theme->get('Name') ?: __('Theme hiện tại', 'acma-security-shield'),
             'meta' => $has_theme_update
-                ? sprintf(__('Theme %1$s có bản cập nhật %2$s', 'wp-plugin-security'), $theme->get('Version') ?: '0.0.0', $theme_updates->response[$theme_slug]['new_version'] ?? '')
-                : sprintf(__('Theme version: %s', 'wp-plugin-security'), $theme->get('Version') ?: '0.0.0'),
+                ? sprintf(__('Theme %1$s có bản cập nhật %2$s', 'acma-security-shield'), $theme->get('Version') ?: '0.0.0', $theme_updates->response[$theme_slug]['new_version'] ?? '')
+                : sprintf(__('Theme version: %s', 'acma-security-shield'), $theme->get('Version') ?: '0.0.0'),
             'color' => $has_theme_update ? '#b36b00' : '#1f7a3f',
         ];
 
         return [
-            'message' => __('Quét lỗ hổng hoàn tất.', 'wp-plugin-security'),
-            'summary' => __('Đã kiểm tra core, plugin và theme đang hoạt động.', 'wp-plugin-security'),
+            'message' => __('Quét lỗ hổng hoàn tất.', 'acma-security-shield'),
+            'summary' => __('Đã kiểm tra core, plugin và theme đang hoạt động.', 'acma-security-shield'),
             'items' => $items,
         ];
     }
@@ -995,7 +995,7 @@ class MonitoringController
         if ($basedir === '' || !is_dir($basedir)) {
             return [
                 'success' => false,
-                'message' => __('Không xác định được thư mục uploads.', 'wp-plugin-security'),
+                'message' => __('Không xác định được thư mục uploads.', 'acma-security-shield'),
             ];
         }
 
@@ -1020,7 +1020,7 @@ class MonitoringController
         if (!is_writable($basedir) && (!file_exists($htaccess) || !is_writable($htaccess))) {
             return [
                 'success' => false,
-                'message' => __('Thư mục uploads không thể ghi .htaccess.', 'wp-plugin-security'),
+                'message' => __('Thư mục uploads không thể ghi .htaccess.', 'acma-security-shield'),
             ];
         }
 
@@ -1028,13 +1028,13 @@ class MonitoringController
         if (!$result) {
             return [
                 'success' => false,
-                'message' => __('Không thể ghi rule bảo vệ uploads.', 'wp-plugin-security'),
+                'message' => __('Không thể ghi rule bảo vệ uploads.', 'acma-security-shield'),
             ];
         }
 
         return [
             'success' => true,
-            'message' => __('Đã áp dụng uploads protection.', 'wp-plugin-security'),
+            'message' => __('Đã áp dụng uploads protection.', 'acma-security-shield'),
         ];
     }
 
@@ -1229,7 +1229,7 @@ class MonitoringController
         }
 
         if (stripos($path, '/uploads/') !== false && preg_match('/\.(php|phtml|phar)$/i', $path)) {
-            $reasons[] = __('PHP trong uploads', 'wp-plugin-security');
+            $reasons[] = __('PHP trong uploads', 'acma-security-shield');
         }
 
         return [
@@ -1261,10 +1261,10 @@ class MonitoringController
     {
         ?>
         <tr>
-            <th scope="row"><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html__($label, 'wp-plugin-security'); ?></label></th>
+            <th scope="row"><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html__($label, 'acma-security-shield'); ?></label></th>
             <td class="wps-inline-setting">
                 <input type="checkbox" id="<?php echo esc_attr($key); ?>" name="<?php echo esc_attr($key); ?>" value="1" <?php checked($settings[$key] ?? false); ?>>
-                <span class="description"><?php echo esc_html__($description, 'wp-plugin-security'); ?></span>
+                <span class="description"><?php echo esc_html__($description, 'acma-security-shield'); ?></span>
             </td>
         </tr>
         <?php
@@ -1277,11 +1277,11 @@ class MonitoringController
     {
         ?>
         <tr>
-            <th scope="row"><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html__($label, 'wp-plugin-security'); ?></label></th>
+            <th scope="row"><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html__($label, 'acma-security-shield'); ?></label></th>
             <td>
                 <input type="number" id="<?php echo esc_attr($key); ?>" name="<?php echo esc_attr($key); ?>" value="<?php echo esc_attr($settings[$key] ?? $default); ?>" class="small-text">
                 <?php if ($description !== '') : ?>
-                    <p class="description"><?php echo esc_html__($description, 'wp-plugin-security'); ?></p>
+                    <p class="description"><?php echo esc_html__($description, 'acma-security-shield'); ?></p>
                 <?php endif; ?>
             </td>
         </tr>

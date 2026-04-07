@@ -170,7 +170,7 @@ class SecurityService
     public function log_event($type, $message, $ip = null)
     {
         if (!$ip) {
-        $ip = $_SERVER['REMOTE_ADDR'] ?? __('Không xác định', 'wp-plugin-security');
+        $ip = $_SERVER['REMOTE_ADDR'] ?? __('Không xác định', 'acma-security-shield');
         }
 
         $logs = get_option('wps_security_logs', []);
@@ -179,7 +179,7 @@ class SecurityService
             'type' => $type,
             'ip' => $ip,
             'message' => $message,
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? __('Không xác định', 'wp-plugin-security')
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? __('Không xác định', 'acma-security-shield')
         ];
 
         array_unshift($logs, $new_log);
@@ -579,10 +579,10 @@ class SecurityService
 
         set_transient($key, $data, $window);
 
-        $this->log_event('404_hit', sprintf(__('Phát hiện 404 từ IP %1$s tại %2$s', 'wp-plugin-security'), $ip, $path), $ip);
+        $this->log_event('404_hit', sprintf(__('Phát hiện 404 từ IP %1$s tại %2$s', 'acma-security-shield'), $ip, $path), $ip);
 
         if ($this->get_setting('monitor_404_auto_block', false) && $data['count'] >= $threshold) {
-            $this->block_ip($ip, sprintf(__('Tự động chặn do vượt ngưỡng 404 (%d lần)', 'wp-plugin-security'), $data['count']));
+            $this->block_ip($ip, sprintf(__('Tự động chặn do vượt ngưỡng 404 (%d lần)', 'acma-security-shield'), $data['count']));
         }
     }
 
@@ -607,7 +607,7 @@ class SecurityService
         }
 
         if ($reason !== '') {
-            $this->log_event('ip_auto_block', sprintf(__('Đã chặn IP %1$s: %2$s', 'wp-plugin-security'), $ip, $reason), $ip);
+            $this->log_event('ip_auto_block', sprintf(__('Đã chặn IP %1$s: %2$s', 'acma-security-shield'), $ip, $reason), $ip);
         }
 
         return true;
