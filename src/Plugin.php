@@ -42,7 +42,6 @@ class Plugin
         new Controllers\SeoContentController();
         new Controllers\MonitoringController();
         new Controllers\AdminController();
-        new Controllers\UpdateController();
     }
 
     /**

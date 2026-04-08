@@ -1261,10 +1261,10 @@ class MonitoringController
     {
         ?>
         <tr>
-            <th scope="row"><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html__($label, 'acma-security-shield'); ?></label></th>
+            <th scope="row"><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html($label); ?></label></th>
             <td class="wps-inline-setting">
                 <input type="checkbox" id="<?php echo esc_attr($key); ?>" name="<?php echo esc_attr($key); ?>" value="1" <?php checked($settings[$key] ?? false); ?>>
-                <span class="description"><?php echo esc_html__($description, 'acma-security-shield'); ?></span>
+                <span class="description"><?php echo esc_html($description); ?></span>
             </td>
         </tr>
         <?php
@@ -1277,11 +1277,11 @@ class MonitoringController
     {
         ?>
         <tr>
-            <th scope="row"><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html__($label, 'acma-security-shield'); ?></label></th>
+            <th scope="row"><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html($label); ?></label></th>
             <td>
                 <input type="number" id="<?php echo esc_attr($key); ?>" name="<?php echo esc_attr($key); ?>" value="<?php echo esc_attr($settings[$key] ?? $default); ?>" class="small-text">
                 <?php if ($description !== '') : ?>
-                    <p class="description"><?php echo esc_html__($description, 'acma-security-shield'); ?></p>
+                    <p class="description"><?php echo esc_html($description); ?></p>
                 <?php endif; ?>
             </td>
         </tr>
